@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLang } from "@/lib/i18n";
 import { useBasket } from "@/lib/useData";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Header({ latestDate }: { latestDate: string }) {
   const { lang, setLang, t } = useLang();
@@ -38,6 +39,7 @@ export default function Header({ latestDate }: { latestDate: string }) {
             <span className="text-faint">/</span>
             <span className={lang === "en" ? "text-acid" : ""}>EN</span>
           </button>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

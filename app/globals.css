@@ -10,13 +10,33 @@
   --color-acid: #c6f432;
   --color-naik: #ff5c5c;
   --color-turun: #c6f432;
+  --color-selection-ink: #0a0a0a;
   --font-mono: var(--font-jetbrains), "IBM Plex Mono", ui-monospace, "SF Mono",
     Menlo, monospace;
+}
+
+/* paper terminal — light theme overrides */
+html[data-theme="light"] {
+  --color-bg: #f4f2ec;
+  --color-panel: #eceade;
+  --color-ink: #111111;
+  --color-dim: #6b6b60;
+  --color-faint: #a3a396;
+  --color-hairline: #d8d5c8;
+  --color-acid: #5a7a00;
+  --color-naik: #c93838;
+  --color-turun: #5a7a00;
+  --color-selection-ink: #f4f2ec;
 }
 
 html {
   background: var(--color-bg);
   color: var(--color-ink);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -28,7 +48,7 @@ body {
 
 ::selection {
   background: var(--color-acid);
-  color: #0a0a0a;
+  color: var(--color-selection-ink);
 }
 
 /* mechanical ticker — constant-speed marquee, no easing */
@@ -70,4 +90,8 @@ select {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%238a8a8a'/></svg>");
   background-repeat: no-repeat;
   background-position: right 10px center;
+}
+
+html[data-theme="light"] select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%236b6b60'/></svg>");
 }

@@ -23,7 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ms" className={jetbrains.variable}>
+    <html lang="ms" className={jetbrains.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.theme;if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-bg text-ink flex flex-col">
         <LangProvider>
           <Header latestDate={meta.latestDate} />
