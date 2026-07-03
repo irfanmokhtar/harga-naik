@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0a;
+  --color-panel: #111111;
+  --color-ink: #ededed;
+  --color-dim: #8a8a8a;
+  --color-faint: #555555;
+  --color-hairline: #262626;
+  --color-acid: #c6f432;
+  --color-naik: #ff5c5c;
+  --color-turun: #c6f432;
+  --font-mono: var(--font-jetbrains), "IBM Plex Mono", ui-monospace, "SF Mono",
+    Menlo, monospace;
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-acid);
+  color: #0a0a0a;
+}
+
+/* mechanical ticker — constant-speed marquee, no easing */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker 60s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}
+
+/* hairline table rows */
+.row-line {
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+input,
+select {
+  font-family: inherit;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%238a8a8a'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}

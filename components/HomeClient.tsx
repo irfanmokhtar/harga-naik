@@ -1,0 +1,183 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import type { Item, Meta, Trend } from "@/lib/types";
+import { useLang } from "@/lib/i18n";
+import { searchItems } from "@/lib/search";
+import { rm, pctStr, moveClass, moveArrow, titleCase } from "@/lib/format";
+import Ticker from "@/components/Ticker";
+
+const BOARD_SIZE = 12;
+
+export default function HomeClient({
+  items,
+  trends,
+  meta,
+}: {
+  items: Item[];
+  trends: Trend[];
+  meta: Meta;
+}) {
+  const { t } = useLang();
+  const [query, setQuery] = useState("");
+
+  const itemByCode = useMemo(
+    () => new Map(items.map((i) => [i.code, i])),
+    [items]
+  );
+  const movers = useMemo(
+    () =>
+      trends
+        .filter((tr) => tr.pct !== null && itemByCode.has(tr.code))
+        .sort((a, b) => b.pct! - a.pct!),
+    [trends, itemByCode]
+  );
+  const risers = movers.filter((m) => m.pct! > 0.05).slice(0, BOARD_SIZE);
+  const fallers = movers
+    .filter((m) => m.pct! < -0.05)
+    .reverse()
+    .slice(0, BOARD_SIZE);
+
+  const results = useMemo(
+    () => searchItems(items, query).slice(0, 30),
+    [items, query]
+  );
+  const trendByCode = useMemo(
+    () => new Map(trends.map((tr) => [tr.code, tr])),
+    [trends]
+  );
+
+  return (
+    <div>
+      <Ticker movers={movers} itemByCode={itemByCode} />
+
+      {/* masthead + search */}
+      <section className="py-10 sm:py-14">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">
+          <span className="text-acid">HARGA</span>NAIK
+          <span className="text-faint">_</span>
+        </h1>
+        <p className="text-dim mt-1 text-[13px]">{t("tagline")}</p>
+        <p className="text-faint mt-1 text-[11px]">
+          {items.length} {t("itemsTracked")} · {t("asOf")} {meta.latestDate}
+        </p>
+
+        <div className="mt-6 relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-acid">
+            &gt;
+          </span>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="w-full bg-panel border border-hairline pl-8 pr-3 py-3 text-[14px] outline-none focus:border-acid placeholder:text-faint"
+            autoFocus
+          />
+        </div>
+        <p className="text-faint text-[11px] mt-1.5">{t("searchHint")}</p>
+
+        {query.trim() && (
+          <div className="mt-4 border border-hairline">
+            <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline">
+              {results.length} {t("results")}
+            </div>
+            {results.length === 0 && (
+              <div className="px-3 py-4 text-dim text-[13px]">
+                {t("noData")}
+              </div>
+            )}
+            {results.map((item) => {
+              const tr = trendByCode.get(item.code);
+              return (
+                <Link
+                  key={item.code}
+                  href={`/item/${item.code}`}
+                  className="flex items-baseline gap-3 px-3 py-2.5 row-line last:border-b-0 hover:bg-panel group"
+                >
+                  <span className="flex-1 min-w-0 truncate group-hover:text-acid">
+                    {titleCase(item.name)}
+                  </span>
+                  <span className="text-faint text-[11px] shrink-0">
+                    {item.unit}
+                  </span>
+                  {tr && (
+                    <span className="w-20 text-right shrink-0">
+                      {rm(tr.med)}
+                    </span>
+                  )}
+                  {tr && (
+                    <span
+                      className={`w-16 text-right text-[12px] shrink-0 ${moveClass(tr.pct)}`}
+                    >
+                      {tr.pct !== null
+                        ? `${moveArrow(tr.pct)} ${pctStr(tr.pct)}`
+                        : "—"}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* barang naik board */}
+      {!query.trim() && (
+        <section className="grid sm:grid-cols-2 gap-px bg-hairline border border-hairline">
+          <Board
+            title={t("top")}
+            movers={risers}
+            itemByCode={itemByCode}
+          />
+          <Board
+            title={t("bottom")}
+            movers={fallers}
+            itemByCode={itemByCode}
+          />
+          <div className="sm:col-span-2 bg-bg px-3 py-2 text-[11px] text-faint">
+            {t("boardSub")}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function Board({
+  title,
+  movers,
+  itemByCode,
+}: {
+  title: string;
+  movers: Trend[];
+  itemByCode: Map<number, Item>;
+}) {
+  return (
+    <div className="bg-bg">
+      <h2 className="px-3 py-2 text-[11px] tracking-widest text-dim border-b border-hairline">
+        {title}
+      </h2>
+      {movers.map((m) => {
+        const item = itemByCode.get(m.code)!;
+        return (
+          <Link
+            key={m.code}
+            href={`/item/${m.code}`}
+            className="flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 hover:bg-panel group"
+          >
+            <span className="flex-1 min-w-0 truncate text-[13px] group-hover:text-acid">
+              {titleCase(item.name)}
+            </span>
+            <span className="w-18 text-right text-[13px]">{rm(m.med)}</span>
+            <span
+              className={`w-16 text-right text-[13px] ${moveClass(m.pct)}`}
+            >
+              {moveArrow(m.pct)} {pctStr(m.pct!)}
+            </span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
