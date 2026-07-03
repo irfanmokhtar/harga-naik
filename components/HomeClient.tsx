@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Item, Meta, Trend } from "@/lib/types";
 import { useLang } from "@/lib/i18n";
@@ -21,6 +21,12 @@ export default function HomeClient({
 }) {
   const { t } = useLang();
   const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  // type-to-search on desktop; no surprise keyboard on touch devices
+  useEffect(() => {
+    if (matchMedia("(pointer: fine)").matches) searchRef.current?.focus();
+  }, []);
 
   const itemByCode = useMemo(
     () => new Map(items.map((i) => [i.code, i])),
@@ -68,11 +74,11 @@ export default function HomeClient({
             &gt;
           </span>
           <input
+            ref={searchRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="w-full bg-panel border border-hairline pl-8 pr-3 py-3 text-[14px] outline-none focus:border-acid placeholder:text-faint"
-            autoFocus
+            className="w-full bg-panel border border-hairline pl-8 pr-3 py-3 text-[16px] sm:text-[14px] outline-none focus:border-acid placeholder:text-faint"
           />
         </div>
         <p className="text-faint text-[11px] mt-1.5">{t("searchHint")}</p>
@@ -124,7 +130,7 @@ export default function HomeClient({
 
       {/* barang naik board */}
       {!query.trim() && (
-        <section className="grid sm:grid-cols-2 gap-px bg-hairline border border-hairline">
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-hairline border border-hairline">
           <Board
             title={t("top")}
             movers={risers}
@@ -164,7 +170,7 @@ function Board({
           <Link
             key={m.code}
             href={`/item/${m.code}`}
-            className="flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 hover:bg-panel group"
+            className="flex items-baseline gap-3 px-3 py-2.5 sm:py-2 row-line last:border-b-0 hover:bg-panel group"
           >
             <span className="flex-1 min-w-0 truncate text-[13px] group-hover:text-acid">
               {titleCase(item.name)}

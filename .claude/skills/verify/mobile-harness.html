@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head><title>mobile harness</title>
+<style>
+  body { margin:0; background:#333; display:flex; gap:16px; padding:16px; }
+  .phone { border:2px solid #888; }
+  iframe { width:390px; height:800px; border:0; display:block; }
+  .label { color:#eee; font:12px monospace; text-align:center; padding:4px; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label" id="l1">/</div>
+    <div class="phone"><iframe id="f1" src="http://localhost:3111/"></iframe></div>
+  </div>
+  <div>
+    <div class="label" id="l2">/item/1355</div>
+    <div class="phone"><iframe id="f2" src="http://localhost:3111/item/1355"></iframe></div>
+  </div>
+  <div>
+    <div class="label" id="l3">/bakul</div>
+    <div class="phone"><iframe id="f3" src="http://localhost:3111/bakul"></iframe></div>
+  </div>
+</body>
+</html>

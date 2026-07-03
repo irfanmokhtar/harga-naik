@@ -125,7 +125,7 @@ export default function BasketClient({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("searchPlaceholder")}
-          className="w-full bg-panel border border-hairline pl-8 pr-3 py-2.5 text-[13px] outline-none focus:border-acid placeholder:text-faint"
+          className="w-full bg-panel border border-hairline pl-8 pr-3 py-2.5 text-[16px] sm:text-[13px] outline-none focus:border-acid placeholder:text-faint"
         />
         {query.trim() && results.length > 0 && (
           <div className="absolute z-10 left-0 right-0 top-full bg-bg border border-hairline max-h-72 overflow-y-auto">
@@ -136,7 +136,7 @@ export default function BasketClient({
                   basket.add(item.code);
                   setQuery("");
                 }}
-                className="w-full text-left px-3 py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-acid cursor-pointer flex justify-between gap-3"
+                className="w-full text-left px-3 py-2.5 sm:py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-acid cursor-pointer flex justify-between gap-3"
               >
                 <span className="truncate">{titleCase(item.name)}</span>
                 <span className="text-faint text-[11px] shrink-0">
@@ -175,7 +175,7 @@ export default function BasketClient({
                 )}
                 <button
                   onClick={() => basket.remove(item.code)}
-                  className="text-faint hover:text-naik text-[11px] cursor-pointer"
+                  className="text-faint hover:text-naik text-[11px] cursor-pointer px-2 py-1.5 -my-1.5 -mr-2"
                 >
                   ✕
                 </button>
@@ -222,7 +222,7 @@ export default function BasketClient({
                     "noopener"
                   )
                 }
-                className="mt-3 border border-hairline px-3 py-1.5 text-[12px] text-dim hover:text-ink hover:border-dim cursor-pointer"
+                className="mt-3 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-dim cursor-pointer"
               >
                 {t("shareWhatsApp")}
               </button>
@@ -263,9 +263,14 @@ export default function BasketClient({
                   <span className="w-14 shrink-0 text-[11px] text-dim">
                     {r.found}/{basket.codes.length}
                   </span>
-                  <span className="flex-1 min-w-0 truncate">
-                    {titleCase(r.premise.name)}
-                    {r === winner && <span className="text-acid"> ◀</span>}
+                  <span className="flex-1 min-w-0">
+                    <span className="block truncate">
+                      {titleCase(r.premise.name)}
+                      {r === winner && <span className="text-acid"> ◀</span>}
+                    </span>
+                    <span className="block sm:hidden truncate text-dim text-[11px]">
+                      {r.premise.district}, {r.premise.state}
+                    </span>
                   </span>
                   <span className="hidden sm:inline w-40 shrink-0 truncate text-dim text-[11px]">
                     {r.premise.district}, {r.premise.state}

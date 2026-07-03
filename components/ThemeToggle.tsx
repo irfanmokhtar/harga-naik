@@ -32,7 +32,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="border border-hairline px-2 py-0.5 text-[11px] text-dim hover:text-ink hover:border-dim cursor-pointer"
+      className="border border-hairline px-2 py-1.5 sm:py-0.5 text-[11px] text-dim hover:text-ink hover:border-dim cursor-pointer"
       aria-label="Tukar tema / switch theme"
     >
       <span className={theme === "dark" ? "text-acid" : ""}>DRK</span>

@@ -106,7 +106,7 @@ export default function ItemClient({
               ? basket.remove(item.code)
               : basket.add(item.code)
           }
-          className={`border px-3 py-1.5 text-[12px] cursor-pointer ${
+          className={`border px-3 py-2.5 sm:py-1.5 text-[12px] cursor-pointer ${
             basket.has(item.code)
               ? "border-acid text-acid"
               : "border-hairline text-dim hover:text-ink hover:border-dim"
@@ -187,14 +187,20 @@ export default function ItemClient({
               >
                 {pct !== null ? `${moveArrow(pct)}${pctStr(pct)}` : "·"}
               </span>
-              <span className="flex-1 min-w-0 truncate">
-                {titleCase(premise.name)}
-                {idx === 0 && <span className="text-acid"> ◀</span>}
+              <span className="flex-1 min-w-0">
+                <span className="block truncate">
+                  {titleCase(premise.name)}
+                  {idx === 0 && <span className="text-acid"> ◀</span>}
+                </span>
+                <span className="block sm:hidden truncate text-dim text-[11px]">
+                  {premise.district}, {premise.state} ·{" "}
+                  <span className="text-faint">{row[3]}</span>
+                </span>
               </span>
               <span className="hidden sm:inline w-40 shrink-0 truncate text-dim text-[11px]">
                 {premise.district}, {premise.state}
               </span>
-              <span className="w-20 shrink-0 text-right text-faint text-[11px]">
+              <span className="hidden sm:inline w-20 shrink-0 text-right text-faint text-[11px]">
                 {row[3]}
               </span>
             </div>
