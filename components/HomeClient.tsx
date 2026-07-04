@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import type { Item, Meta, Trend } from "@/lib/types";
+import type { Item, Meta, Premise, ShopStat, Trend } from "@/lib/types";
 import { useLang } from "@/lib/i18n";
-import { searchItems } from "@/lib/search";
+import { searchItems, searchPremises } from "@/lib/search";
+import { loadPremises, loadShopStats } from "@/lib/useData";
 import { rm, pctStr, moveClass, moveArrow, titleCase } from "@/lib/format";
 import Ticker from "@/components/Ticker";
 
@@ -49,6 +50,22 @@ export default function HomeClient({
     () => searchItems(items, query).slice(0, 30),
     [items, query]
   );
+
+  // shop data loads lazily on first keystroke — not on every home visit
+  const [premiseList, setPremiseList] = useState<Premise[] | null>(null);
+  const [shopStats, setShopStats] = useState<Map<number, ShopStat> | null>(
+    null
+  );
+  useEffect(() => {
+    if (!query.trim() || premiseList) return;
+    loadPremises().then((m) => setPremiseList([...m.values()]));
+    loadShopStats().then(setShopStats);
+  }, [query, premiseList]);
+
+  const shopResults = useMemo(
+    () => (premiseList ? searchPremises(premiseList, query).slice(0, 10) : []),
+    [premiseList, query]
+  );
   const trendByCode = useMemo(
     () => new Map(trends.map((tr) => [tr.code, tr])),
     [trends]
@@ -61,7 +78,7 @@ export default function HomeClient({
       {/* masthead + search */}
       <section className="py-10 sm:py-14">
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">
-          <span className="text-acid">HARGA</span>NAIK
+          <span className="text-acid">Harga</span>Naik<span className="text-acid">Ke</span>
           <span className="text-faint">_</span>
         </h1>
         <p className="text-dim mt-1 text-[13px]">{t("tagline")}</p>
@@ -88,7 +105,7 @@ export default function HomeClient({
             <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline">
               {results.length} {t("results")}
             </div>
-            {results.length === 0 && (
+            {results.length === 0 && shopResults.length === 0 && (
               <div className="px-3 py-4 text-dim text-[13px]">
                 {t("noData")}
               </div>
@@ -124,6 +141,39 @@ export default function HomeClient({
                 </Link>
               );
             })}
+            {shopResults.length > 0 && (
+              <>
+                <div className="px-3 py-2 text-[11px] tracking-widest text-dim border-b border-t border-hairline">
+                  {t("shops")} · {shopResults.length}
+                </div>
+                {shopResults.map((p) => {
+                  const stat = shopStats?.get(p.code);
+                  return (
+                    <Link
+                      key={p.code}
+                      href={`/kedai/${p.code}`}
+                      className="flex items-baseline gap-3 px-3 py-2.5 row-line last:border-b-0 hover:bg-panel group"
+                    >
+                      <span className="flex-1 min-w-0 truncate group-hover:text-acid">
+                        {titleCase(p.name)}
+                      </span>
+                      <span className="text-dim text-[11px] shrink-0 max-w-[40%] truncate">
+                        {titleCase(p.district)}, {p.state}
+                      </span>
+                      {stat && (
+                        <span
+                          className={`w-20 text-right text-[12px] shrink-0 ${
+                            stat.score >= 60 ? "text-turun" : "text-dim"
+                          }`}
+                        >
+                          {stat.score}% {t("cheapShort")}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
           </div>
         )}
       </section>

@@ -12,7 +12,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HARGA NAIK — papan harga barang Malaysia",
+  title: "HargaNaikKe — papan harga barang Malaysia",
   description:
     "Semak harga barang keperluan di seluruh Malaysia. Data PriceCatcher KPDN & DOSM.",
 };

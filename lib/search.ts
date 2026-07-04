@@ -1,4 +1,4 @@
-import type { Item } from "./types";
+import type { Item, Premise } from "./types";
 
 // PriceCatcher item names are Bahasa Melayu only. These aliases let English
 // queries hit common staples; matches are also run against name + category.
@@ -81,4 +81,29 @@ export function searchItems(items: Item[], query: string): Item[] {
   }
   scored.sort((a, b) => b[0] - a[0] || b[1].n - a[1].n);
   return scored.map(([, item]) => item);
+}
+
+/** Search premises by name, district, state, address, or type. */
+export function searchPremises(premises: Premise[], query: string): Premise[] {
+  const q = normalize(query).trim();
+  if (!q) return [];
+  const terms = q.split(/\s+/);
+
+  const scored: Array<[number, Premise]> = [];
+  for (const p of premises) {
+    const hay = normalize(
+      `${p.name} ${p.district} ${p.state} ${p.address} ${p.type}`
+    );
+    const place = normalize(`${p.district} ${p.state}`).split(/\s+/);
+    let score = 0;
+    for (const term of terms) {
+      if (hay.includes(term)) score += term.length >= 4 ? 2 : 1;
+      // exact place-word match so "tesco ipoh" ranks Ipoh branches first
+      if (place.includes(term)) score += 2;
+    }
+    if (normalize(p.name).startsWith(q)) score += 4;
+    if (score > 0) scored.push([score, p]);
+  }
+  scored.sort((a, b) => b[0] - a[0] || a[1].name.localeCompare(b[1].name));
+  return scored.map(([, p]) => p);
 }

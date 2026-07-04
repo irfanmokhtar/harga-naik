@@ -13,14 +13,21 @@ export default function Header({ latestDate }: { latestDate: string }) {
     <header className="border-b border-hairline sticky top-0 z-20 bg-bg/95 backdrop-blur-sm">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2 sm:gap-4">
         <Link href="/" className="shrink-0 leading-none">
-          <span className="text-acid font-bold tracking-tight">HARGA</span>
-          <span className="font-bold tracking-tight">NAIK</span>
+          <span className="text-acid font-bold tracking-tight">Harga</span>
+          <span className="font-bold tracking-tight">Naik</span>
+          <span className="text-acid font-bold tracking-tight">Ke</span>
           <span className="text-faint">_</span>
         </Link>
         <div className="hidden sm:block text-[11px] text-dim truncate">
           {t("asOf")} {latestDate}
         </div>
         <nav className="flex items-center gap-3 sm:gap-4 text-[13px]">
+          <Link
+            href="/banding"
+            className="hover:text-acid whitespace-nowrap py-2"
+          >
+            Banding
+          </Link>
           <Link
             href="/bakul"
             className="hover:text-acid whitespace-nowrap py-2"

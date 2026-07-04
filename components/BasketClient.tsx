@@ -11,6 +11,7 @@ import LocationPicker, {
   matchesLocation,
   type LocationFilter,
 } from "@/components/LocationPicker";
+import ShopPicker from "@/components/ShopPicker";
 
 interface PremiseTotal {
   premise: Premise;
@@ -32,6 +33,7 @@ export default function BasketClient({
   const [loc, setLoc] = useState<LocationFilter>({ state: "", district: "" });
   const [priceMap, setPriceMap] = useState<Map<number, PriceRow[]>>(new Map());
   const [query, setQuery] = useState("");
+  const [myShop, setMyShop] = useState<Premise | null>(null);
 
   const itemByCode = useMemo(
     () => new Map(items.map((i) => [i.code, i])),
@@ -77,6 +79,22 @@ export default function BasketClient({
       (a, b) => b.found - a.found || a.total - b.total
     );
   }, [premises, basket.codes, priceMap, loc]);
+
+  // deliberately unfiltered by location so any picked shop resolves
+  const mine = useMemo(() => {
+    if (!myShop || basket.codes.length === 0) return null;
+    if (basket.codes.some((c) => !priceMap.has(c))) return null;
+    let total = 0;
+    const prices = new Map<number, number>();
+    for (const code of basket.codes) {
+      const row = priceMap.get(code)!.find((r) => r[0] === myShop.code);
+      if (row) {
+        total += row[1];
+        prices.set(code, row[1]);
+      }
+    }
+    return { total, found: prices.size, prices };
+  }, [myShop, basket.codes, priceMap]);
 
   const full = ranking?.filter((r) => r.found === basket.codes.length) ?? [];
   const winner = full[0] ?? null;
@@ -238,6 +256,54 @@ export default function BasketClient({
           {ranking && ranking.length === 0 && (
             <p className="mt-6 text-dim text-[13px]">{t("noData")}</p>
           )}
+
+          {/* my shop */}
+          <div className="mt-6">
+            <div className="text-[10px] tracking-widest text-faint uppercase mb-2">
+              {t("atThisShop")}
+            </div>
+            <ShopPicker
+              premises={allPremises}
+              value={myShop}
+              onChange={setMyShop}
+            />
+            {myShop && !mine && (
+              <p className="mt-3 text-dim text-[13px]">{t("loading")}</p>
+            )}
+            {myShop && mine && mine.found === 0 && (
+              <p className="mt-3 text-dim text-[13px]">{t("noData")}</p>
+            )}
+            {myShop && mine && mine.found > 0 && (
+              <div className="mt-3 border border-hairline p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <div className="text-dim text-[12px]">
+                    {mine.found}/{basket.codes.length} {t("coverage")}
+                  </div>
+                  <div className="text-2xl font-bold">{rm(mine.total)}</div>
+                </div>
+                {winner && mine.found === basket.codes.length && (
+                  <div
+                    className={`mt-1 text-right text-[12px] ${
+                      mine.total > winner.total ? "text-naik" : "text-acid"
+                    }`}
+                  >
+                    {mine.total > winner.total
+                      ? `+${rm(mine.total - winner.total)} ${t("moreThanCheapest")}`
+                      : `= ${t("cheapest")}`}
+                  </div>
+                )}
+                {mine.found < basket.codes.length && (
+                  <div className="mt-2 text-[11px] text-dim">
+                    {t("missingHere")}:{" "}
+                    {basketItems
+                      .filter((i) => !mine.prices.has(i.code))
+                      .map((i) => titleCase(i.name))
+                      .join(", ")}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* ranking table */}
           {ranking && ranking.length > 0 && (

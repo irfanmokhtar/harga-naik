@@ -20,6 +20,19 @@ export interface Premise {
 /** [premise_code, price, prev_price | null, iso_date] */
 export type PriceRow = [number, number, number | null, string];
 
+/** [item_code, price, prev_price | null, iso_date] */
+export type ShopPriceRow = [number, number, number | null, string];
+
+export interface ShopStat {
+  code: number;
+  /** items tracked at this premise (with a national median) */
+  n: number;
+  /** items priced below the national median */
+  cheap: number;
+  /** round(100 * cheap / n) */
+  score: number;
+}
+
 export interface Trend {
   code: number;
   min: number;

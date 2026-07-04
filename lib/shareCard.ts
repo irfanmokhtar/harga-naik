@@ -65,13 +65,16 @@ export async function drawItemCard(
   // masthead
   ctx.font = MONO(40, 700);
   ctx.fillStyle = ACID;
-  ctx.fillText("HARGA", M, M + 36);
-  const w1 = ctx.measureText("HARGA").width;
+  ctx.fillText("Harga", M, M + 36);
+  const w1 = ctx.measureText("Harga").width;
   ctx.fillStyle = INK;
-  ctx.fillText("NAIK", M + w1, M + 36);
-  const w2 = ctx.measureText("NAIK").width;
+  ctx.fillText("Naik", M + w1, M + 36);
+  const w2 = ctx.measureText("Naik").width;
+  ctx.fillStyle = ACID;
+  ctx.fillText("Ke", M + w1 + w2, M + 36);
+  const w3 = ctx.measureText("Ke").width;
   ctx.fillStyle = FAINT;
-  ctx.fillText("_", M + w1 + w2, M + 36);
+  ctx.fillText("_", M + w1 + w2 + w3, M + 36);
 
   ctx.font = MONO(26);
   ctx.fillStyle = DIM;

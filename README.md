@@ -1,4 +1,4 @@
-# HARGA NAIK_
+# HargaNaikKe_
 
 Papan pantau harga barang keperluan Malaysia — a grocery-price terminal built on
 [PriceCatcher](https://data.gov.my/data-catalogue/pricecatcher) open data from

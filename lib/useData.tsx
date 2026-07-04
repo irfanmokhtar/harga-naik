@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import type { Premise, PriceRow } from "./types";
+import type { Premise, PriceRow, ShopPriceRow, ShopStat } from "./types";
 
 // ---- premises (fetched once, cached module-level) ----
 
@@ -55,6 +55,61 @@ export function usePrices(itemCode: number): PriceRow[] | null {
       live = false;
     };
   }, [itemCode]);
+  return rows;
+}
+
+// ---- shop stats (fetched once, cached module-level) ----
+
+let shopStatCache: Map<number, ShopStat> | null = null;
+let shopStatPromise: Promise<Map<number, ShopStat>> | null = null;
+
+export function loadShopStats(): Promise<Map<number, ShopStat>> {
+  if (shopStatCache) return Promise.resolve(shopStatCache);
+  shopStatPromise ??= fetch("/data/shops-index.json")
+    .then((r) => (r.ok ? r.json() : []))
+    .then((list: ShopStat[]) => {
+      shopStatCache = new Map(list.map((s) => [s.code, s]));
+      return shopStatCache;
+    });
+  return shopStatPromise;
+}
+
+export function useShopStats(): Map<number, ShopStat> | null {
+  const [stats, setStats] = useState<Map<number, ShopStat> | null>(
+    shopStatCache
+  );
+  useEffect(() => {
+    if (!stats) loadShopStats().then(setStats);
+  }, [stats]);
+  return stats;
+}
+
+// ---- per-shop prices ----
+
+const shopPriceCache = new Map<number, ShopPriceRow[]>();
+
+export function loadShopPrices(premiseCode: number): Promise<ShopPriceRow[]> {
+  const cached = shopPriceCache.get(premiseCode);
+  if (cached) return Promise.resolve(cached);
+  return fetch(`/data/shops/${premiseCode}.json`)
+    .then((r) => (r.ok ? r.json() : []))
+    .then((rows: ShopPriceRow[]) => {
+      shopPriceCache.set(premiseCode, rows);
+      return rows;
+    });
+}
+
+export function useShopPrices(premiseCode: number): ShopPriceRow[] | null {
+  const [rows, setRows] = useState<ShopPriceRow[] | null>(
+    shopPriceCache.get(premiseCode) ?? null
+  );
+  useEffect(() => {
+    let live = true;
+    loadShopPrices(premiseCode).then((r) => live && setRows(r));
+    return () => {
+      live = false;
+    };
+  }, [premiseCode]);
   return rows;
 }
 

@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "shops": "node scripts/build-shop-index.mjs",
+    "prebuild": "node scripts/build-shop-index.mjs",
     "build": "next build",
     "start": "next start",
     "ingest": "python3 ingest/ingest.py"
