@@ -1,4 +1,5 @@
 name: Refresh PriceCatcher data
+# Registered manually via git push after the initial import predated the workflow OAuth scope.
 
 on:
   schedule:
