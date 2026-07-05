@@ -348,6 +348,7 @@ export default function BasketClient({
               </div>
             </div>
           )}
+          <p className="mt-3 text-faint text-[11px]">{t("coverageNote")}</p>
         </>
       )}
     </div>

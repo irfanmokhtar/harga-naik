@@ -1,6 +1,6 @@
 # HargaNaikKe
 
-**Papan pantau harga barang keperluan Malaysia** — a grocery-price watch board
+**Papan pemerhati harga barang keperluan Malaysia** — a grocery-price watch board
 built on [PriceCatcher](https://data.gov.my/data-catalogue/pricecatcher) open
 data from KPDN (Kementerian Perdagangan Dalam Negeri dan Kos Sara Hidup) & DOSM
 (Department of Statistics Malaysia).

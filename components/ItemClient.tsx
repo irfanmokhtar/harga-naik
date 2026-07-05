@@ -262,6 +262,7 @@ export default function ItemClient({
           </button>
         )}
       </div>
+      <p className="text-faint text-[11px] mt-1.5">{t("coverageNote")}</p>
 
       {stats && (
         <ShareBar item={item} stats={stats} loc={loc} meta={meta} />

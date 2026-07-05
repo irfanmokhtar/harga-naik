@@ -6,14 +6,14 @@ export type Lang = "ms" | "en";
 
 const STRINGS = {
   ms: {
-    tagline: "Papan pantau harga barang keperluan Malaysia",
+    tagline: "Papan pemerhati harga barang keperluan Malaysia",
     searchPlaceholder: "Cari barang… (cth: ayam, telur, minyak masak)",
     search: "Carian",
     barangNaik: "Barang Naik",
     barangTurun: "Barang Turun",
     boardSub: "Perubahan harga penengah",
     allItems: "Semua Barang",
-    basket: "Bakul Saya",
+    basket: "Bakul",
     basketShort: "Bakul",
     item: "Barang",
     price: "Harga",
@@ -55,6 +55,8 @@ const STRINGS = {
       "Sumber: PriceCatcher, KPDN & DOSM (data.gov.my), lesen CC BY 4.0.",
     cpiNote:
       "Data ini untuk pemantauan harga, bukan ukuran inflasi. Rujuk data CPI rasmi DOSM untuk inflasi.",
+    coverageNote:
+      "Tidak semua premis disenaraikan — PriceCatcher hanya meninjau sebahagian premis & barang secara giliran, jadi hanya premis yang melaporkan harga baru-baru ini muncul di sini.",
     backHome: "← Kembali",
     searchHint: "Taip untuk cari — BM atau English",
     notEnoughData: "Sampel kecil — tiada perbandingan",
@@ -134,6 +136,8 @@ const STRINGS = {
       "Source: PriceCatcher, KPDN & DOSM (data.gov.my), CC BY 4.0 licence.",
     cpiNote:
       "This data is for price surveillance, not inflation measurement. Refer to DOSM's official CPI data for inflation.",
+    coverageNote:
+      "Not all premises are listed — PriceCatcher surveys only a rotating sample of premises & items, so only premises that reported a price recently appear here.",
     backHome: "← Back",
     searchHint: "Type to search — BM or English",
     notEnoughData: "Small sample — no comparison",
