@@ -174,13 +174,30 @@ export default function ItemClient({
       <div className="mt-4 border border-hairline">
         <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex items-center justify-between gap-3">
           <span className="shrink-0">{t("priceSpread")}</span>
-          <div className="flex items-center gap-3">
-            <SortButton label={t("price")} active={sortKey === "price"} dir={sortDir} onClick={() => setSort("price")} />
-            <SortButton label={t("date")} active={sortKey === "date"} dir={sortDir} onClick={() => setSort("date")} />
-            <span className="shrink-0">
-              {scoped?.length ?? "…"} {t("premises")}
-            </span>
-          </div>
+          <span className="shrink-0">
+            {scoped?.length ?? "…"} {t("premises")}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-3 px-3 py-1.5 text-[10px] tracking-wide text-faint border-b border-hairline">
+          <SortButton
+            className="w-16"
+            label={t("price")}
+            active={sortKey === "price"}
+            dir={sortDir}
+            onClick={() => setSort("price")}
+          />
+          <span className="w-14 shrink-0">{t("change")}</span>
+          <span className="flex-1 min-w-0">{t("premise")}</span>
+          <span className="hidden sm:inline w-40 shrink-0">
+            {t("district")}, {t("state")}
+          </span>
+          <SortButton
+            className="hidden sm:inline w-20 justify-end"
+            label={t("date")}
+            active={sortKey === "date"}
+            dir={sortDir}
+            onClick={() => setSort("date")}
+          />
         </div>
         {!visible && (
           <div className="px-3 py-6 text-dim text-[13px]">{t("loading")}</div>
@@ -255,19 +272,21 @@ function SortButton({
   active,
   dir,
   onClick,
+  className,
 }: {
   label: string;
   active: boolean;
   dir: "asc" | "desc";
   onClick: () => void;
+  className?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 cursor-pointer hover:text-acid ${active ? "text-acid" : ""}`}
+      className={`flex items-center gap-0.5 shrink-0 cursor-pointer hover:text-acid ${active ? "text-acid" : ""} ${className ?? ""}`}
     >
       {label}
-      {active && <span className="ml-0.5">{dir === "asc" ? "▲" : "▼"}</span>}
+      {active && <span>{dir === "asc" ? "▲" : "▼"}</span>}
     </button>
   );
 }
