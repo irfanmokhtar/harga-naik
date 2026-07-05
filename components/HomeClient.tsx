@@ -99,10 +99,9 @@ export default function HomeClient({
             className="w-full bg-panel border border-hairline pl-8 pr-3 py-3 text-[16px] sm:text-[14px] outline-none focus:border-acid placeholder:text-faint"
           />
         </div>
-        <p className="text-faint text-[11px] mt-1.5">{t("searchHint")}</p>
 
         {query.trim() && (
-          <div className="mt-4 border border-hairline">
+          <div className="mt-2 border border-hairline">
             <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline">
               {results.length} {t("results")}
             </div>

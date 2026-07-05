@@ -8,7 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 function CompareIcon({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="3 3 18 18"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth={2}
@@ -61,14 +61,14 @@ export default function Header({ latestDate }: { latestDate: string }) {
         <nav className="flex items-center gap-3 sm:gap-4 text-[13px]">
           <Link
             href="/banding"
-            className="hover:text-acid whitespace-nowrap py-2 inline-flex items-center gap-1"
+            className="hover:text-acid whitespace-nowrap py-2 inline-flex items-center gap-1.5"
           >
             <CompareIcon className="w-3.5 h-3.5 shrink-0" />
             {t("navBanding")}
           </Link>
           <Link
             href="/bakul"
-            className="hover:text-acid whitespace-nowrap py-2 inline-flex items-center gap-1"
+            className="hover:text-acid whitespace-nowrap py-2 inline-flex items-center gap-1.5"
           >
             <CartIcon className="w-3.5 h-3.5 shrink-0" />
             <span className="sm:hidden">{t("basketShort")}</span>

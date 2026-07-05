@@ -56,9 +56,8 @@ const STRINGS = {
     cpiNote:
       "Data ini untuk pemantauan harga, bukan ukuran inflasi. Rujuk data CPI rasmi DOSM untuk inflasi.",
     coverageNote:
-      "Tidak semua premis disenaraikan — PriceCatcher hanya meninjau sebahagian premis & barang secara giliran, jadi hanya premis yang melaporkan harga baru-baru ini muncul di sini.",
+      "Hanya sebahagian premis tersenarai. PriceCatcher meninjau premis & barang secara berkala, hanya premis & barang yang ditinjau akan dikemaskini mengikut tarikh.",
     backHome: "← Kembali",
-    searchHint: "Taip untuk cari — BM atau English",
     notEnoughData: "Sampel kecil — tiada perbandingan",
     loading: "Memuatkan…",
     itemsTracked: "barang dipantau",
@@ -140,7 +139,6 @@ const STRINGS = {
     coverageNote:
       "Not all premises are listed — PriceCatcher surveys only a rotating sample of premises & items, so only premises that reported a price recently appear here.",
     backHome: "← Back",
-    searchHint: "Type to search — BM or English",
     notEnoughData: "Small sample — no comparison",
     loading: "Loading…",
     itemsTracked: "items tracked",
