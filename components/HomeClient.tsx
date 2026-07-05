@@ -85,6 +85,7 @@ export default function HomeClient({
         <p className="text-faint mt-1 text-[11px]">
           {items.length} {t("itemsTracked")} · {t("asOf")} {meta.latestDate}
         </p>
+        <p className="text-faint text-[11px]">{t("coverageNote")}</p>
 
         <div className="mt-6 relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-acid">
