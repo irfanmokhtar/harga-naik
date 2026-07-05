@@ -8,7 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 function CompareIcon({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="3 3 18 18"
       fill="none"
       stroke="currentColor"
       strokeWidth={2}
@@ -64,7 +64,7 @@ export default function Header({ latestDate }: { latestDate: string }) {
             className="hover:text-acid whitespace-nowrap py-2 inline-flex items-center gap-1"
           >
             <CompareIcon className="w-3.5 h-3.5 shrink-0" />
-            Banding
+            {t("navBanding")}
           </Link>
           <Link
             href="/bakul"

@@ -85,6 +85,7 @@ const STRINGS = {
     compareShops: "Banding Kedai",
     commonItemsTotal: "Jumlah barang sepunya",
     compareThisShop: "Banding kedai ini",
+    navBanding: "Banding",
   },
   en: {
     tagline: "Malaysia's grocery price watch board",
@@ -166,6 +167,7 @@ const STRINGS = {
     compareShops: "Compare Shops",
     commonItemsTotal: "Total (common items)",
     compareThisShop: "Compare this shop",
+    navBanding: "Compare",
   },
 } as const;
 
