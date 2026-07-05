@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Item, Meta, Premise, PriceRow, Trend } from "@/lib/types";
-import { useLang } from "@/lib/i18n";
+import { useLang, periodLabel } from "@/lib/i18n";
 import { usePremises, usePrices, useBasket } from "@/lib/useData";
 import { rm, pctStr, moveClass, moveArrow, titleCase } from "@/lib/format";
 import LocationPicker, {
@@ -39,7 +39,7 @@ export default function ItemClient({
   trend: Trend | null;
   meta: Meta;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const premises = usePremises();
   const rows = usePrices(item.code);
   const basket = useBasket();
@@ -150,6 +150,9 @@ export default function ItemClient({
           className={stats ? moveClass(stats.pct) : undefined}
         />
       </div>
+      <p className="text-faint text-[11px] mt-1.5">
+        {t("vsPrev")}: {periodLabel(lang, meta)}
+      </p>
 
       {/* range bar */}
       {stats && stats.max > stats.min && (

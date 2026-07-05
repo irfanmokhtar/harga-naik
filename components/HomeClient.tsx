@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Item, Meta, Premise, ShopStat, Trend } from "@/lib/types";
-import { useLang } from "@/lib/i18n";
+import { useLang, periodLabel } from "@/lib/i18n";
 import { searchItems, searchPremises } from "@/lib/search";
 import { loadPremises, loadShopStats } from "@/lib/useData";
 import { rm, pctStr, moveClass, moveArrow, titleCase } from "@/lib/format";
@@ -20,7 +20,7 @@ export default function HomeClient({
   trends: Trend[];
   meta: Meta;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -192,7 +192,7 @@ export default function HomeClient({
             itemByCode={itemByCode}
           />
           <div className="sm:col-span-2 bg-bg px-3 py-2 text-[11px] text-faint">
-            {t("boardSub")}
+            {t("boardSub")} · {periodLabel(lang, meta)}
           </div>
         </section>
       )}

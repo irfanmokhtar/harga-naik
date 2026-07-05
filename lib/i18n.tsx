@@ -11,7 +11,7 @@ const STRINGS = {
     search: "Carian",
     barangNaik: "Barang Naik",
     barangTurun: "Barang Turun",
-    boardSub: "Perubahan harga penengah berbanding tempoh sebelumnya",
+    boardSub: "Perubahan harga penengah",
     allItems: "Semua Barang",
     basket: "Bakul Saya",
     basketShort: "Bakul",
@@ -90,7 +90,7 @@ const STRINGS = {
     search: "Search",
     barangNaik: "Price Risers",
     barangTurun: "Price Fallers",
-    boardSub: "Median price change vs the previous period",
+    boardSub: "Median price change",
     allItems: "All Items",
     basket: "My Basket",
     basketShort: "Basket",
@@ -166,6 +166,16 @@ const STRINGS = {
 } as const;
 
 export type StringKey = keyof (typeof STRINGS)["ms"];
+
+/** Human phrase for the comparison window, e.g. "last 7 days vs the 14 days before". */
+export function periodLabel(
+  lang: Lang,
+  meta: { currentWindowDays: number; previousWindowDays: number }
+): string {
+  return lang === "ms"
+    ? `${meta.currentWindowDays} hari terakhir vs ${meta.previousWindowDays} hari sebelumnya`
+    : `last ${meta.currentWindowDays} days vs the ${meta.previousWindowDays} days before`;
+}
 
 const LangContext = createContext<{
   lang: Lang;
