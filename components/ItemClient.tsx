@@ -45,6 +45,18 @@ export default function ItemClient({
   const basket = useBasket();
   const [loc, setLoc] = useState<LocationFilter>({ state: "", district: "" });
   const [showAll, setShowAll] = useState(false);
+  const [sortKey, setSortKey] = useState<"price" | "date">("price");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  const setSort = (key: "price" | "date") => {
+    if (key === sortKey) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir(key === "date" ? "desc" : "asc");
+    }
+    setShowAll(false);
+  };
 
   const scoped = useMemo(() => {
     if (!rows || !premises) return null;
@@ -53,8 +65,15 @@ export default function ItemClient({
       const premise = premises.get(row[0]);
       if (premise && matchesLocation(premise, loc)) out.push({ row, premise });
     }
-    return out; // rows are pre-sorted cheapest-first by ingestion
-  }, [rows, premises, loc]);
+    // rows are pre-sorted cheapest-first by ingestion
+    const dir = sortDir === "asc" ? 1 : -1;
+    out.sort((a, b) => {
+      const av = sortKey === "price" ? a.row[1] : a.row[3];
+      const bv = sortKey === "price" ? b.row[1] : b.row[3];
+      return av < bv ? -dir : av > bv ? dir : 0;
+    });
+    return out;
+  }, [rows, premises, loc, sortKey, sortDir]);
 
   const stats: ScopedStats | null = useMemo(() => {
     if (!scoped || scoped.length === 0) return null;
@@ -153,11 +172,15 @@ export default function ItemClient({
 
       {/* price table */}
       <div className="mt-4 border border-hairline">
-        <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex justify-between">
-          <span>{t("priceSpread")}</span>
-          <span>
-            {scoped?.length ?? "…"} {t("premises")}
-          </span>
+        <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex items-center justify-between gap-3">
+          <span className="shrink-0">{t("priceSpread")}</span>
+          <div className="flex items-center gap-3">
+            <SortButton label={t("price")} active={sortKey === "price"} dir={sortDir} onClick={() => setSort("price")} />
+            <SortButton label={t("date")} active={sortKey === "date"} dir={sortDir} onClick={() => setSort("date")} />
+            <span className="shrink-0">
+              {scoped?.length ?? "…"} {t("premises")}
+            </span>
+          </div>
         </div>
         {!visible && (
           <div className="px-3 py-6 text-dim text-[13px]">{t("loading")}</div>
@@ -169,15 +192,17 @@ export default function ItemClient({
           const [, price, prev] = row;
           const pct =
             prev !== null && prev > 0 ? ((price - prev) / prev) * 100 : null;
+          const isCheapest =
+            idx === 0 && sortKey === "price" && sortDir === "asc";
           return (
             <div
               key={`${row[0]}`}
               className={`flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px] ${
-                idx === 0 ? "bg-panel" : ""
+                isCheapest ? "bg-panel" : ""
               }`}
             >
               <span
-                className={`w-16 shrink-0 ${idx === 0 ? "text-acid font-bold" : ""}`}
+                className={`w-16 shrink-0 ${isCheapest ? "text-acid font-bold" : ""}`}
               >
                 {rm(price)}
               </span>
@@ -190,7 +215,7 @@ export default function ItemClient({
               <span className="flex-1 min-w-0">
                 <span className="block truncate">
                   {titleCase(premise.name)}
-                  {idx === 0 && <span className="text-acid"> ◀</span>}
+                  {isCheapest && <span className="text-acid"> ◀</span>}
                 </span>
                 <span className="block sm:hidden truncate text-dim text-[11px]">
                   {premise.district}, {premise.state} ·{" "}
@@ -222,6 +247,28 @@ export default function ItemClient({
         <ShareBar item={item} stats={stats} loc={loc} meta={meta} />
       )}
     </div>
+  );
+}
+
+function SortButton({
+  label,
+  active,
+  dir,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  dir: "asc" | "desc";
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`shrink-0 cursor-pointer hover:text-acid ${active ? "text-acid" : ""}`}
+    >
+      {label}
+      {active && <span className="ml-0.5">{dir === "asc" ? "▲" : "▼"}</span>}
+    </button>
   );
 }
 
