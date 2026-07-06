@@ -104,7 +104,7 @@ export default function ShareBar({
   };
 
   const btn =
-    "border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-dim cursor-pointer";
+    "border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink cursor-pointer";
 
   return (
     <div className="mt-6 flex flex-wrap items-center gap-2">

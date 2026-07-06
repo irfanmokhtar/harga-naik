@@ -46,7 +46,7 @@ export default function BasketClient({
   useEffect(() => {
     let live = true;
     Promise.all(
-      basket.codes.map((c) => loadPrices(c).then((rows) => [c, rows] as const))
+      basket.codes.map((c) => loadPrices(c).then((f) => [c, f.rows] as const))
     ).then((entries) => {
       if (live) setPriceMap(new Map(entries));
     });
@@ -126,24 +126,20 @@ export default function BasketClient({
 
   return (
     <div className="pt-6">
-      <Link href="/" className="text-[12px] text-dim hover:text-acid">
+      <Link href="/" className="kicker hover:text-accent">
         {t("backHome")}
       </Link>
-      <h1 className="mt-4 text-xl sm:text-2xl font-bold tracking-tight">
+      <h1 className="mt-4 font-display font-semibold text-3xl sm:text-4xl tracking-tight">
         {t("basket")}
-        <span className="text-faint">_</span>
       </h1>
 
       {/* add items */}
-      <div className="mt-4 relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-acid">
-          &gt;
-        </span>
+      <div className="mt-6 relative">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("searchPlaceholder")}
-          className="w-full bg-panel border border-hairline pl-8 pr-3 py-2.5 text-[16px] sm:text-[13px] outline-none focus:border-acid placeholder:text-faint"
+          className="w-full bg-transparent border-0 border-b-2 border-ink pb-2 text-[16px] sm:text-[15px] outline-none focus:border-accent placeholder:text-faint"
         />
         {query.trim() && results.length > 0 && (
           <div className="absolute z-10 left-0 right-0 top-full bg-bg border border-hairline max-h-72 overflow-y-auto">
@@ -154,7 +150,7 @@ export default function BasketClient({
                   basket.add(item.code);
                   setQuery("");
                 }}
-                className="w-full text-left px-3 py-2.5 sm:py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-acid cursor-pointer flex justify-between gap-3"
+                className="w-full text-left px-3 py-2.5 sm:py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-accent cursor-pointer flex justify-between gap-3"
               >
                 <span className="truncate">{titleCase(item.name)}</span>
                 <span className="text-faint text-[11px] shrink-0">
@@ -171,21 +167,21 @@ export default function BasketClient({
       ) : (
         <>
           {/* basket contents */}
-          <div className="mt-4 border border-hairline">
+          <div className="mt-6">
             {basketItems.map((item) => (
               <div
                 key={item.code}
-                className="flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px]"
+                className="flex items-baseline gap-3 py-2 row-line text-[13px]"
               >
                 <Link
                   href={`/item/${item.code}`}
-                  className="flex-1 min-w-0 truncate hover:text-acid"
+                  className="flex-1 min-w-0 truncate hover:text-accent"
                 >
                   {titleCase(item.name)}
                 </Link>
                 <span className="text-faint text-[11px]">{item.unit}</span>
                 {winner && (
-                  <span className="w-20 text-right">
+                  <span className="w-20 text-right font-mono">
                     {winner.prices.has(item.code)
                       ? rm(winner.prices.get(item.code)!)
                       : "—"}
@@ -214,13 +210,11 @@ export default function BasketClient({
             <p className="mt-6 text-dim text-[13px]">{t("loading")}</p>
           )}
           {ranking && winner && (
-            <div className="mt-6 border border-acid p-4">
-              <div className="text-[10px] tracking-widest text-faint uppercase">
-                {t("basketCheapest")}
-              </div>
+            <div className="mt-8 border-t-2 border-ink pt-4">
+              <div className="kicker">{t("basketCheapest")}</div>
               <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
                 <div>
-                  <div className="text-lg font-bold">
+                  <div className="font-display font-semibold text-2xl">
                     {titleCase(winner.premise.name)}
                   </div>
                   <div className="text-dim text-[12px]">
@@ -228,7 +222,7 @@ export default function BasketClient({
                     {winner.premise.type}
                   </div>
                 </div>
-                <div className="text-2xl text-acid font-bold">
+                <div className="font-display font-semibold text-4xl text-accent">
                   {rm(winner.total)}
                 </div>
               </div>
@@ -240,7 +234,7 @@ export default function BasketClient({
                     "noopener"
                   )
                 }
-                className="mt-3 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-dim cursor-pointer"
+                className="mt-4 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink cursor-pointer"
               >
                 {t("shareWhatsApp")}
               </button>
@@ -258,8 +252,8 @@ export default function BasketClient({
           )}
 
           {/* my shop */}
-          <div className="mt-6">
-            <div className="text-[10px] tracking-widest text-faint uppercase mb-2">
+          <div className="mt-8">
+            <div className="kicker border-b-2 border-ink pb-2 mb-3">
               {t("atThisShop")}
             </div>
             <ShopPicker
@@ -279,12 +273,14 @@ export default function BasketClient({
                   <div className="text-dim text-[12px]">
                     {mine.found}/{basket.codes.length} {t("coverage")}
                   </div>
-                  <div className="text-2xl font-bold">{rm(mine.total)}</div>
+                  <div className="font-display font-semibold text-2xl">
+                    {rm(mine.total)}
+                  </div>
                 </div>
                 {winner && mine.found === basket.codes.length && (
                   <div
-                    className={`mt-1 text-right text-[12px] ${
-                      mine.total > winner.total ? "text-naik" : "text-acid"
+                    className={`mt-1 text-right text-[12px] font-mono ${
+                      mine.total > winner.total ? "text-naik" : "text-turun"
                     }`}
                   >
                     {mine.total > winner.total
@@ -307,32 +303,33 @@ export default function BasketClient({
 
           {/* ranking table */}
           {ranking && ranking.length > 0 && (
-            <div className="mt-4 border border-hairline">
-              <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex justify-between">
-                <span>{t("basketTotal")}</span>
-                <span>
+            <div className="mt-8">
+              <div className="flex justify-between border-b-2 border-ink pb-2">
+                <span className="kicker">{t("basketTotal")}</span>
+                <span className="kicker">
                   {ranking.length} {t("premises")}
                 </span>
               </div>
-              {ranking.slice(0, 20).map((r, idx) => (
+              {ranking.slice(0, 20).map((r) => (
                 <div
                   key={r.premise.code}
-                  className={`flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px] ${
-                    r === winner ? "bg-panel" : ""
+                  className={`flex items-baseline gap-3 py-2 row-line text-[13px] -mx-2 px-2 ${
+                    r === winner ? "bg-gold" : ""
                   }`}
                 >
                   <span
-                    className={`w-20 shrink-0 ${r === winner ? "text-acid font-bold" : ""}`}
+                    className={`w-20 shrink-0 font-mono ${
+                      r === winner ? "text-accent font-semibold" : ""
+                    }`}
                   >
                     {rm(r.total)}
                   </span>
-                  <span className="w-14 shrink-0 text-[11px] text-dim">
+                  <span className="w-14 shrink-0 text-[11px] text-dim font-mono">
                     {r.found}/{basket.codes.length}
                   </span>
                   <span className="flex-1 min-w-0">
                     <span className="block truncate">
                       {titleCase(r.premise.name)}
-                      {r === winner && <span className="text-acid"> ◀</span>}
                     </span>
                     <span className="block sm:hidden truncate text-dim text-[11px]">
                       {r.premise.district}, {r.premise.state}
@@ -343,7 +340,7 @@ export default function BasketClient({
                   </span>
                 </div>
               ))}
-              <div className="px-3 py-2 text-[10px] text-faint border-t border-hairline">
+              <div className="py-2 text-[10px] text-faint border-t border-hairline">
                 n/{basket.codes.length} = {t("coverage")}
               </div>
             </div>

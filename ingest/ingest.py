@@ -31,6 +31,11 @@ BASE = "https://storage.data.gov.my/pricecatcher"
 CURRENT_DAYS = 7
 PREVIOUS_DAYS = 14
 
+# Weekly national history for sparklines / trend charts.
+HISTORY_WEEKS = 12
+# Months of parquet to pull — must cover HISTORY_WEEKS plus the windows.
+MONTHS = 4
+
 
 def month_str(year: int, month: int) -> str:
     return f"{year:04d}-{month:02d}"
@@ -49,19 +54,21 @@ def url_exists(url: str) -> bool:
         return False
 
 
-def find_fact_urls(today: date) -> list[str]:
-    """Latest available monthly file plus the month before it (the current
-    month's file may not exist yet early in the month)."""
+def find_fact_urls(today: date, months: int = MONTHS) -> list[str]:
+    """Latest available monthly file plus up to `months - 1` before it (the
+    current month's file may not exist yet early in the month)."""
     y, m = today.year, today.month
     if not url_exists(f"{BASE}/pricecatcher_{month_str(y, m)}.parquet"):
         y, m = prev_month(y, m)
         if not url_exists(f"{BASE}/pricecatcher_{month_str(y, m)}.parquet"):
             sys.exit(f"No PriceCatcher file found for {today} or the month before.")
-    py, pm = prev_month(y, m)
-    urls = [f"{BASE}/pricecatcher_{month_str(y, m)}.parquet"]
-    prev_url = f"{BASE}/pricecatcher_{month_str(py, pm)}.parquet"
-    if url_exists(prev_url):
-        urls.append(prev_url)
+    urls = []
+    for _ in range(months):
+        url = f"{BASE}/pricecatcher_{month_str(y, m)}.parquet"
+        if not url_exists(url):
+            break
+        urls.append(url)
+        y, m = prev_month(y, m)
     return urls
 
 
@@ -114,6 +121,28 @@ def run(out_dir: Path) -> None:
     con.execute("ALTER TABLE fact_clean RENAME TO fact")
     n_after = con.execute("SELECT count(*) FROM fact").fetchone()[0]
     print(f"outlier filter: dropped {n_before - n_after:,} of {n_before:,} rows")
+
+    # Weekly national aggregates for the last HISTORY_WEEKS weeks —
+    # feeds item-page trend charts and home-board sparklines.
+    con.execute(f"""
+        CREATE TABLE weekly AS
+        SELECT item_code, date_trunc('week', date)::DATE AS wk,
+               min(price) AS mn, median(price) AS med, max(price) AS mx
+        FROM fact
+        -- ISO-week-aligned, inclusive lower bound (weekly buckets start on
+        -- Monday, so an inclusive Monday-aligned start yields exactly
+        -- HISTORY_WEEKS buckets) — deliberately not the exclusive day-offset
+        -- bounds used by the cur/prev windows below; do not "harmonize" it.
+        WHERE date >= date_trunc('week', DATE '{latest}') - INTERVAL {(HISTORY_WEEKS - 1) * 7} DAY
+        GROUP BY 1, 2
+    """)
+    hist_by_item: dict[int, list] = {}
+    for code, wk, mn, med, mx in con.execute(
+        "SELECT * FROM weekly ORDER BY item_code, wk"
+    ).fetchall():
+        hist_by_item.setdefault(code, []).append(
+            [wk.isoformat(), round(mn, 2), round(med, 2), round(mx, 2)])
+    print(f"weekly history: {len(hist_by_item)} items")
 
     # Latest price per item x premise in each window.
     con.execute(f"""
@@ -190,7 +219,9 @@ def run(out_dir: Path) -> None:
              d.isoformat()])
     for item_code, item_rows in by_item.items():
         (prices_dir / f"{item_code}.json").write_text(
-            json.dumps(item_rows, separators=(",", ":")))
+            json.dumps(
+                {"rows": item_rows, "hist": hist_by_item.get(item_code, [])},
+                separators=(",", ":")))
     print(f"wrote {len(by_item)} files to {prices_dir}/")
 
     # trends.json — per-item aggregates; change = current vs previous median
@@ -215,6 +246,7 @@ def run(out_dir: Path) -> None:
             "max": round(mx, 2), "n": n,
             "prevMed": round(prev_med, 2) if prev_med is not None else None,
             "pct": pct,
+            "spark": [h[2] for h in hist_by_item.get(code, [])],
         })
     dump("trends.json", trend_rows)
 
@@ -223,6 +255,7 @@ def run(out_dir: Path) -> None:
         "latestDate": latest.isoformat(),
         "currentWindowDays": CURRENT_DAYS,
         "previousWindowDays": PREVIOUS_DAYS,
+        "historyWeeks": HISTORY_WEEKS,
         "sources": fact_urls,
         "license": "CC BY 4.0 — KPDN & DOSM (data.gov.my PriceCatcher)",
     })

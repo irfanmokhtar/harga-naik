@@ -52,9 +52,7 @@ export default function ShopClient({
       out.push({ item, price, date, med, pct });
     }
     // best deals first; unrated rows sink to the bottom
-    out.sort(
-      (a, b) => (a.pct ?? Infinity) - (b.pct ?? Infinity)
-    );
+    out.sort((a, b) => (a.pct ?? Infinity) - (b.pct ?? Infinity));
     return out;
   }, [rows, itemByCode, medByCode]);
 
@@ -62,64 +60,63 @@ export default function ShopClient({
 
   return (
     <div className="pt-6">
-      <Link href="/" className="text-[12px] text-dim hover:text-acid">
+      <Link href="/" className="kicker hover:text-accent">
         {t("backHome")}
       </Link>
 
       <div className="mt-4">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+        <p className="kicker">
+          {titleCase(premise.district)}, {premise.state} · {premise.type}
+        </p>
+        <h1 className="font-display font-semibold text-3xl sm:text-4xl tracking-tight mt-2">
           {titleCase(premise.name)}
         </h1>
-        <p className="text-dim text-[12px] mt-1">
-          {titleCase(premise.address)} · {titleCase(premise.district)},{" "}
-          {premise.state} · {premise.type}
+        <p className="text-dim text-[12px] mt-2">
+          {titleCase(premise.address)}
         </p>
       </div>
 
-      {/* stats strip */}
-      <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-px bg-hairline border border-hairline">
+      {/* figures row */}
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-6">
         <Stat
           label={t("cheapnessScore")}
           value={stat ? `${stat.score}%` : "—"}
-          acid={!!stat && stat.score >= 60}
+          className={stat && stat.score >= 60 ? "text-turun" : undefined}
         />
-        <Stat
-          label={t("itemsAtShop")}
-          value={stat ? String(stat.n) : "—"}
-        />
+        <Stat label={t("itemsAtShop")} value={stat ? String(stat.n) : "—"} />
         <Stat label={t("asOf")} value={meta.latestDate} />
       </div>
-      <p className="text-faint text-[11px] mt-1.5">{t("scoreNote")}</p>
+      <p className="text-faint text-[11px] mt-2">{t("scoreNote")}</p>
 
-      <div className="mt-3">
+      <div className="mt-4">
         <Link
           href={`/banding?a=${premise.code}`}
-          className="inline-block border border-hairline px-3 py-1.5 text-[12px] text-dim hover:text-acid hover:border-acid"
+          className="inline-block border border-ink px-4 py-2 text-[11px] tracking-[0.14em] uppercase hover:bg-panel"
         >
           {t("compareThisShop")} →
         </Link>
       </div>
 
       {/* price table */}
-      <div className="mt-6 border border-hairline">
-        <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex justify-between">
-          <span>{t("price")}</span>
-          <span>{t("vsMedian")}</span>
+      <div className="mt-10">
+        <div className="flex justify-between border-b-2 border-ink pb-2">
+          <span className="kicker">{t("price")}</span>
+          <span className="kicker">{t("vsMedian")}</span>
         </div>
         {!visible && (
-          <div className="px-3 py-6 text-dim text-[13px]">{t("loading")}</div>
+          <div className="py-6 text-dim text-[13px]">{t("loading")}</div>
         )}
         {visible && visible.length === 0 && (
-          <div className="px-3 py-6 text-dim text-[13px]">{t("noData")}</div>
+          <div className="py-6 text-dim text-[13px]">{t("noData")}</div>
         )}
         {visible?.map(({ item, price, date, pct }) => (
           <Link
             key={item.code}
             href={`/item/${item.code}`}
-            className="flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px] hover:bg-panel group"
+            className="flex items-baseline gap-3 py-2 row-line text-[13px] hover:bg-panel group -mx-2 px-2"
           >
             <span className="flex-1 min-w-0">
-              <span className="block truncate group-hover:text-acid">
+              <span className="block truncate group-hover:text-accent">
                 {titleCase(item.name)}
               </span>
               <span className="block sm:hidden truncate text-dim text-[11px]">
@@ -129,8 +126,10 @@ export default function ShopClient({
             <span className="hidden sm:inline w-24 shrink-0 truncate text-faint text-[11px]">
               {item.unit}
             </span>
-            <span className="w-18 text-right shrink-0">{rm(price)}</span>
-            <span className="w-24 text-right shrink-0 text-[12px]">
+            <span className="w-18 text-right shrink-0 font-mono">
+              {rm(price)}
+            </span>
+            <span className="w-24 text-right shrink-0 text-[12px] font-mono">
               {pct === null ? (
                 <span className="text-dim">—</span>
               ) : pct <= -5 ? (
@@ -150,7 +149,7 @@ export default function ShopClient({
         {joined && joined.length > PAGE && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="w-full px-3 py-2 text-[12px] text-dim hover:text-acid border-t border-hairline cursor-pointer text-left"
+            className="w-full py-2 text-[12px] text-dim hover:text-accent border-b border-hairline cursor-pointer text-left"
           >
             {showAll ? t("showLess") : `${t("showAll")} (${joined.length})`}
           </button>
@@ -163,18 +162,20 @@ export default function ShopClient({
 function Stat({
   label,
   value,
-  acid,
+  className,
 }: {
   label: string;
   value: string;
-  acid?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="bg-bg px-3 py-3">
-      <div className="text-[10px] tracking-widest text-faint uppercase">
-        {label}
+    <div className="border-t-2 border-ink pt-3">
+      <div className="kicker">{label}</div>
+      <div
+        className={`mt-1 font-display font-semibold text-2xl sm:text-3xl ${className ?? ""}`}
+      >
+        {value}
       </div>
-      <div className={`mt-1 text-lg ${acid ? "text-acid" : ""}`}>{value}</div>
     </div>
   );
 }

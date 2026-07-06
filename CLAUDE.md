@@ -45,7 +45,7 @@ at `storage.data.gov.my/pricecatcher`. Two stages precompute everything:
 1. **`ingest/ingest.py`** — DuckDB queries the parquet URLs *remotely* (no full
    download), joins the fact table to `lookup_item` / `lookup_premise`, and
    writes: `items.json`, `premises.json`, `trends.json`, `meta.json`, and
-   per-item shards `prices/{item_code}.json`.
+   per-item shards `prices/{item_code}.json`. Also emits weekly national history: trends get `spark` (≤12 weekly medians) and price shards are `{rows, hist}`.
 2. **`scripts/build-shop-index.mjs`** (npm `prebuild`) — inverts the per-item
    price shards into per-shop shards `shops/{premise_code}.json` plus
    `shops-index.json` (per-shop cheapness `score`). Runs on every build; no-ops
@@ -102,10 +102,13 @@ Price/shop rows are compact positional arrays, not objects (see `lib/types.ts`):
 - **`lib/format.ts`** — `rm()`, `pctStr()`, `moveClass()`/`moveArrow()`
   (up=naik/red, down=turun/green), `titleCase()`. Reuse these for any price or
   movement rendering.
-- **Styling**: Tailwind v4 with a terminal aesthetic. Custom color tokens
-  (`acid`, `dim`, `faint`, `hairline`, `panel`, `bg`, `ink`, `naik`, `turun`)
-  are defined in `app/globals.css` — use them, not raw hex. Theme (DRK/LGT)
-  toggled via `data-theme` on `<html>`.
+- **Styling**: Tailwind v4 with an editorial (data-journalism) aesthetic —
+  Fraunces display serif (`font-display`), Inter body, JetBrains Mono for
+  price/figure columns (`font-mono`). Custom color tokens (`accent`, `dim`,
+  `faint`, `hairline`, `panel`, `bg`, `ink`, `naik`, `turun`, `gold`) are
+  defined in `app/globals.css` — use them, not raw hex. `.kicker` = small-caps
+  section label. Theme is light-paper by default; dark (warm charcoal) toggled
+  via `data-theme` on `<html>`.
 
 ## Conventions
 

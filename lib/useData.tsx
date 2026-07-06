@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import type { Premise, PriceRow, ShopPriceRow, ShopStat } from "./types";
+import type { Premise, PriceFile, PriceRow, ShopPriceRow, ShopStat } from "./types";
 
 // ---- premises (fetched once, cached module-level) ----
 
@@ -31,31 +31,35 @@ export function usePremises(): Map<number, Premise> | null {
 
 // ---- per-item prices ----
 
-const priceCache = new Map<number, PriceRow[]>();
+const priceCache = new Map<number, PriceFile>();
 
-export function loadPrices(itemCode: number): Promise<PriceRow[]> {
+export function loadPrices(itemCode: number): Promise<PriceFile> {
   const cached = priceCache.get(itemCode);
   if (cached) return Promise.resolve(cached);
   return fetch(`/data/prices/${itemCode}.json`)
     .then((r) => (r.ok ? r.json() : []))
-    .then((rows: PriceRow[]) => {
-      priceCache.set(itemCode, rows);
-      return rows;
+    .then((raw: PriceRow[] | PriceFile) => {
+      // old-shape shards are a bare rows array; normalize
+      const file: PriceFile = Array.isArray(raw)
+        ? { rows: raw, hist: [] }
+        : raw;
+      priceCache.set(itemCode, file);
+      return file;
     });
 }
 
-export function usePrices(itemCode: number): PriceRow[] | null {
-  const [rows, setRows] = useState<PriceRow[] | null>(
+export function usePrices(itemCode: number): PriceFile | null {
+  const [file, setFile] = useState<PriceFile | null>(
     priceCache.get(itemCode) ?? null
   );
   useEffect(() => {
     let live = true;
-    loadPrices(itemCode).then((r) => live && setRows(r));
+    loadPrices(itemCode).then((f) => live && setFile(f));
     return () => {
       live = false;
     };
   }, [itemCode]);
-  return rows;
+  return file;
 }
 
 // ---- shop stats (fetched once, cached module-level) ----

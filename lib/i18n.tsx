@@ -6,13 +6,18 @@ export type Lang = "ms" | "en";
 
 const STRINGS = {
   ms: {
-    tagline: "Papan pemerhati harga barang keperluan Malaysia",
+    edition: "Edisi",
+    heroTitle: "Harga naik ke, minggu ini?",
     searchPlaceholder: "Cari barang… (cth: ayam, telur, minyak masak)",
     search: "Carian",
     barangNaik: "Barang Naik",
     barangTurun: "Barang Turun",
     boardSub: "Perubahan harga penengah",
-    allItems: "Semua Barang",
+    featBakulDesc:
+      "Senarai belanja anda, dikira — premis paling jimat untuk seluruh bakul.",
+    featBandingDesc: "Dua kedai, barang demi barang — mana satu lebih jimat?",
+    featKedaiDesc: "Cari mana-mana kedai dan lihat berapa jimat harganya.",
+    open: "Buka",
     basket: "Bakul",
     basketShort: "Bakul",
     item: "Barang",
@@ -85,15 +90,24 @@ const STRINGS = {
     commonItemsTotal: "Jumlah barang sepunya",
     compareThisShop: "Banding kedai ini",
     navBanding: "Banding",
+    trendTitle: "Arah harga mingguan",
+    trendNote:
+      "Penengah kebangsaan mingguan · jalur = julat termurah–tertinggi",
+    methodNote: "Tetingkap perbandingan",
   },
   en: {
-    tagline: "Malaysia's grocery price watch board",
+    edition: "Edition",
+    heroTitle: "Are prices up this week?",
     searchPlaceholder: "Search items… (e.g. ayam, telur, cooking oil)",
     search: "Search",
     barangNaik: "Price Risers",
     barangTurun: "Price Fallers",
     boardSub: "Median price change",
-    allItems: "All Items",
+    featBakulDesc:
+      "Your shopping list, priced — the cheapest premise for the whole basket.",
+    featBandingDesc: "Two shops, item by item — which one saves more?",
+    featKedaiDesc: "Search any shop and see how cheap it runs.",
+    open: "Open",
     basket: "My Basket",
     basketShort: "Basket",
     item: "Item",
@@ -166,6 +180,9 @@ const STRINGS = {
     commonItemsTotal: "Total (common items)",
     compareThisShop: "Compare this shop",
     navBanding: "Compare",
+    trendTitle: "Weekly price trend",
+    trendNote: "Weekly national median · band = cheapest–highest range",
+    methodNote: "Comparison window",
   },
 } as const;
 

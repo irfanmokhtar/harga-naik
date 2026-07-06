@@ -43,14 +43,11 @@ export default function ShopPicker({
 
   return (
     <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-acid">
-        &gt;
-      </span>
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t("pickShop")}
-        className="w-full bg-panel border border-hairline pl-8 pr-3 py-2.5 text-[16px] sm:text-[13px] outline-none focus:border-acid placeholder:text-faint"
+        className="w-full bg-panel border border-hairline px-3 py-2.5 text-[16px] sm:text-[13px] outline-none focus:border-accent placeholder:text-faint"
       />
       {results.length > 0 && (
         <div className="absolute z-10 left-0 right-0 top-full bg-bg border border-hairline max-h-72 overflow-y-auto">
@@ -61,7 +58,7 @@ export default function ShopPicker({
                 onChange(p);
                 setQuery("");
               }}
-              className="w-full text-left px-3 py-2.5 sm:py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-acid cursor-pointer flex justify-between gap-3"
+              className="w-full text-left px-3 py-2.5 sm:py-2 row-line last:border-b-0 text-[13px] hover:bg-panel hover:text-accent cursor-pointer flex justify-between gap-3"
             >
               <span className="truncate">{titleCase(p.name)}</span>
               <span className="text-faint text-[11px] shrink-0 truncate max-w-[45%]">

@@ -25,8 +25,10 @@ export default function Ticker({
         href={`/item/${m.code}`}
         className="inline-flex items-baseline gap-2 px-4 shrink-0 hover:bg-panel"
       >
-        <span className="text-[12px]">{titleCase(item.name)}</span>
-        <span className={`text-[12px] ${up ? "text-naik" : "text-turun"}`}>
+        <span className="text-[12px] text-dim">{titleCase(item.name)}</span>
+        <span
+          className={`text-[12px] font-mono ${up ? "text-naik" : "text-turun"}`}
+        >
           {up ? "▲" : "▼"} {pctStr(m.pct!)}
         </span>
       </Link>
