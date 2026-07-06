@@ -46,7 +46,7 @@ export default function BasketClient({
   useEffect(() => {
     let live = true;
     Promise.all(
-      basket.codes.map((c) => loadPrices(c).then((rows) => [c, rows] as const))
+      basket.codes.map((c) => loadPrices(c).then((f) => [c, f.rows] as const))
     ).then((entries) => {
       if (live) setPriceMap(new Map(entries));
     });

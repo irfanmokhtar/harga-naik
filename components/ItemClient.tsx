@@ -41,7 +41,8 @@ export default function ItemClient({
 }) {
   const { t, lang } = useLang();
   const premises = usePremises();
-  const rows = usePrices(item.code);
+  const file = usePrices(item.code);
+  const rows = file ? file.rows : null;
   const basket = useBasket();
   const [loc, setLoc] = useState<LocationFilter>({ state: "", district: "" });
   const [showAll, setShowAll] = useState(false);
