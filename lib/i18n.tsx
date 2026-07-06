@@ -6,12 +6,19 @@ export type Lang = "ms" | "en";
 
 const STRINGS = {
   ms: {
+    edition: "Edisi",
+    heroTitle: "Harga naik ke, minggu ini?",
     tagline: "Papan pemerhati harga barang keperluan Malaysia",
     searchPlaceholder: "Cari barang… (cth: ayam, telur, minyak masak)",
     search: "Carian",
     barangNaik: "Barang Naik",
     barangTurun: "Barang Turun",
     boardSub: "Perubahan harga penengah",
+    featBakulDesc:
+      "Senarai belanja anda, dikira — premis paling jimat untuk seluruh bakul.",
+    featBandingDesc: "Dua kedai, barang demi barang — mana satu lebih jimat?",
+    featKedaiDesc: "Cari mana-mana kedai dan lihat berapa jimat harganya.",
+    open: "Buka",
     allItems: "Semua Barang",
     basket: "Bakul",
     basketShort: "Bakul",
@@ -91,12 +98,19 @@ const STRINGS = {
     methodNote: "Tetingkap perbandingan",
   },
   en: {
+    edition: "Edition",
+    heroTitle: "Are prices up this week?",
     tagline: "Malaysia's grocery price watch board",
     searchPlaceholder: "Search items… (e.g. ayam, telur, cooking oil)",
     search: "Search",
     barangNaik: "Price Risers",
     barangTurun: "Price Fallers",
     boardSub: "Median price change",
+    featBakulDesc:
+      "Your shopping list, priced — the cheapest premise for the whole basket.",
+    featBandingDesc: "Two shops, item by item — which one saves more?",
+    featKedaiDesc: "Search any shop and see how cheap it runs.",
+    open: "Open",
     allItems: "All Items",
     basket: "My Basket",
     basketShort: "Basket",
