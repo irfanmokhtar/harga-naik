@@ -97,14 +97,13 @@ export default function CompareClient({
 
   return (
     <div className="pt-6">
-      <Link href="/" className="text-[12px] text-dim hover:text-acid">
+      <Link href="/" className="kicker hover:text-accent">
         {t("backHome")}
       </Link>
-      <h1 className="mt-4 text-xl sm:text-2xl font-bold tracking-tight">
+      <h1 className="mt-4 font-display font-semibold text-3xl sm:text-4xl tracking-tight">
         {t("compareShops")}
-        <span className="text-faint">_</span>
       </h1>
-      <p className="text-faint mt-1 text-[11px]">
+      <p className="text-faint mt-2 text-[11px]">
         {t("asOf")} {meta.latestDate}
       </p>
 
@@ -139,18 +138,18 @@ export default function CompareClient({
       )}
 
       {a && b && table && (
-        <div className="mt-6 border border-hairline">
-          <div className="flex items-baseline gap-3 px-3 py-2 text-[11px] text-dim border-b border-hairline">
-            <span className="flex-1 min-w-0">{t("item")}</span>
-            <span className="w-20 text-right truncate">
+        <div className="mt-8">
+          <div className="flex items-baseline gap-3 pb-2 border-b-2 border-ink">
+            <span className="flex-1 min-w-0 kicker">{t("item")}</span>
+            <span className="w-20 text-right truncate kicker">
               {titleCase(a.name).split(" ")[0]}
             </span>
-            <span className="w-20 text-right truncate">
+            <span className="w-20 text-right truncate kicker">
               {titleCase(b.name).split(" ")[0]}
             </span>
           </div>
           {table.rows.length === 0 && (
-            <div className="px-3 py-6 text-dim text-[13px]">{t("noData")}</div>
+            <div className="py-6 text-dim text-[13px]">{t("noData")}</div>
           )}
           {table.rows.map(({ item, pa, pb }) => {
             const aWins = pa !== null && pb !== null && pa < pb;
@@ -159,21 +158,29 @@ export default function CompareClient({
               <Link
                 key={item.code}
                 href={`/item/${item.code}`}
-                className="flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px] hover:bg-panel group"
+                className="flex items-baseline gap-3 py-2 row-line text-[13px] hover:bg-panel group -mx-2 px-2"
               >
-                <span className="flex-1 min-w-0 truncate group-hover:text-acid">
+                <span className="flex-1 min-w-0 truncate group-hover:text-accent">
                   {titleCase(item.name)}
                 </span>
                 <span
-                  className={`w-20 text-right shrink-0 ${
-                    aWins ? "text-acid font-bold" : pa === null ? "text-faint" : ""
+                  className={`w-20 text-right shrink-0 font-mono ${
+                    aWins
+                      ? "text-turun font-semibold"
+                      : pa === null
+                        ? "text-faint"
+                        : ""
                   }`}
                 >
                   {pa !== null ? rm(pa) : "—"}
                 </span>
                 <span
-                  className={`w-20 text-right shrink-0 ${
-                    bWins ? "text-acid font-bold" : pb === null ? "text-faint" : ""
+                  className={`w-20 text-right shrink-0 font-mono ${
+                    bWins
+                      ? "text-turun font-semibold"
+                      : pb === null
+                        ? "text-faint"
+                        : ""
                   }`}
                 >
                   {pb !== null ? rm(pb) : "—"}
@@ -182,7 +189,7 @@ export default function CompareClient({
             );
           })}
           {table.common > 0 && (
-            <div className="flex items-baseline gap-3 px-3 py-2.5 border-t border-hairline text-[13px] font-bold">
+            <div className="flex items-baseline gap-3 py-3 border-t-2 border-ink text-[13px] font-semibold">
               <span className="flex-1 min-w-0 truncate">
                 {t("commonItemsTotal")}{" "}
                 <span className="text-dim font-normal text-[11px]">
@@ -190,15 +197,15 @@ export default function CompareClient({
                 </span>
               </span>
               <span
-                className={`w-20 text-right shrink-0 ${
-                  table.totalA < table.totalB ? "text-acid" : ""
+                className={`w-20 text-right shrink-0 font-mono text-[15px] ${
+                  table.totalA < table.totalB ? "text-turun" : ""
                 }`}
               >
                 {rm(table.totalA)}
               </span>
               <span
-                className={`w-20 text-right shrink-0 ${
-                  table.totalB < table.totalA ? "text-acid" : ""
+                className={`w-20 text-right shrink-0 font-mono text-[15px] ${
+                  table.totalB < table.totalA ? "text-turun" : ""
                 }`}
               >
                 {rm(table.totalB)}
