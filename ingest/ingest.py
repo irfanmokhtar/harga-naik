@@ -129,11 +129,17 @@ def run(out_dir: Path) -> None:
         SELECT item_code, date_trunc('week', date)::DATE AS wk,
                min(price) AS mn, median(price) AS med, max(price) AS mx
         FROM fact
+        -- ISO-week-aligned, inclusive lower bound (weekly buckets start on
+        -- Monday, so an inclusive Monday-aligned start yields exactly
+        -- HISTORY_WEEKS buckets) — deliberately not the exclusive day-offset
+        -- bounds used by the cur/prev windows below; do not "harmonize" it.
         WHERE date >= date_trunc('week', DATE '{latest}') - INTERVAL {(HISTORY_WEEKS - 1) * 7} DAY
-        GROUP BY 1, 2 ORDER BY 1, 2
+        GROUP BY 1, 2
     """)
     hist_by_item: dict[int, list] = {}
-    for code, wk, mn, med, mx in con.execute("SELECT * FROM weekly").fetchall():
+    for code, wk, mn, med, mx in con.execute(
+        "SELECT * FROM weekly ORDER BY item_code, wk"
+    ).fetchall():
         hist_by_item.setdefault(code, []).append(
             [wk.isoformat(), round(mn, 2), round(med, 2), round(mx, 2)])
     print(f"weekly history: {len(hist_by_item)} items")

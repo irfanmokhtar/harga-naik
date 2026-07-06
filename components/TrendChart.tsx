@@ -59,6 +59,7 @@ export default function TrendChart({ hist }: { hist: HistWeek[] }) {
 
   const pick = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width) return;
     const fx = ((e.clientX - rect.left) / rect.width) * W;
     const i = Math.round(((fx - PAD.l) / (W - PAD.l - PAD.r)) * li);
     setHover(Math.max(0, Math.min(li, i)));
