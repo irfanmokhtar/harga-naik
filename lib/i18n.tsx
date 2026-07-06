@@ -85,6 +85,9 @@ const STRINGS = {
     commonItemsTotal: "Jumlah barang sepunya",
     compareThisShop: "Banding kedai ini",
     navBanding: "Banding",
+    trendTitle: "Arah harga mingguan",
+    trendNote:
+      "Penengah kebangsaan mingguan · jalur = julat termurah–tertinggi",
   },
   en: {
     tagline: "Malaysia's grocery price watch board",
@@ -166,6 +169,8 @@ const STRINGS = {
     commonItemsTotal: "Total (common items)",
     compareThisShop: "Compare this shop",
     navBanding: "Compare",
+    trendTitle: "Weekly price trend",
+    trendNote: "Weekly national median · band = cheapest–highest range",
   },
 } as const;
 
