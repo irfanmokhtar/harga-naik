@@ -88,6 +88,7 @@ const STRINGS = {
     trendTitle: "Arah harga mingguan",
     trendNote:
       "Penengah kebangsaan mingguan · jalur = julat termurah–tertinggi",
+    methodNote: "Tetingkap perbandingan",
   },
   en: {
     tagline: "Malaysia's grocery price watch board",
@@ -171,6 +172,7 @@ const STRINGS = {
     navBanding: "Compare",
     trendTitle: "Weekly price trend",
     trendNote: "Weekly national median · band = cheapest–highest range",
+    methodNote: "Comparison window",
   },
 } as const;
 

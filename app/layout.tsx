@@ -47,7 +47,7 @@ export default function RootLayout({
           <main className="flex-1 w-full max-w-4xl mx-auto px-4 pb-16">
             {children}
           </main>
-          <Footer />
+          <Footer meta={meta} />
         </LangProvider>
       </body>
     </html>
