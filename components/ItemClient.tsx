@@ -11,6 +11,7 @@ import LocationPicker, {
   type LocationFilter,
 } from "@/components/LocationPicker";
 import ShareBar from "@/components/ShareBar";
+import TrendChart from "@/components/TrendChart";
 
 const PAGE = 25;
 
@@ -106,19 +107,19 @@ export default function ItemClient({
 
   return (
     <div className="pt-6">
-      <Link href="/" className="text-[12px] text-dim hover:text-acid">
+      <Link href="/" className="kicker hover:text-accent">
         {t("backHome")}
       </Link>
 
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-            {titleCase(item.name)}
-          </h1>
-          <p className="text-dim text-[12px] mt-1">
+          <p className="kicker">
             {titleCase(item.category)} · {item.unit} · {t("asOf")}{" "}
             {meta.latestDate}
           </p>
+          <h1 className="font-display font-semibold text-3xl sm:text-4xl tracking-tight mt-2">
+            {titleCase(item.name)}
+          </h1>
         </div>
         <button
           onClick={() =>
@@ -126,19 +127,23 @@ export default function ItemClient({
               ? basket.remove(item.code)
               : basket.add(item.code)
           }
-          className={`border px-3 py-2.5 sm:py-1.5 text-[12px] cursor-pointer ${
+          className={`px-4 py-2.5 sm:py-2 text-[11px] tracking-[0.14em] uppercase cursor-pointer border ${
             basket.has(item.code)
-              ? "border-acid text-acid"
-              : "border-hairline text-dim hover:text-ink hover:border-dim"
+              ? "border-ink bg-ink text-bg"
+              : "border-ink text-ink hover:bg-panel"
           }`}
         >
           {basket.has(item.code) ? `✓ ${t("inBasket")}` : t("addToBasket")}
         </button>
       </div>
 
-      {/* stats strip */}
-      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-px bg-hairline border border-hairline">
-        <Stat label={t("cheapest")} value={stats ? rm(stats.min) : "—"} acid />
+      {/* figures row */}
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-6">
+        <Stat
+          label={t("cheapest")}
+          value={stats ? rm(stats.min) : "—"}
+          className="text-accent"
+        />
         <Stat label={t("median")} value={stats ? rm(stats.med) : "—"} />
         <Stat label={t("highest")} value={stats ? rm(stats.max) : "—"} />
         <Stat
@@ -151,19 +156,32 @@ export default function ItemClient({
           className={stats ? moveClass(stats.pct) : undefined}
         />
       </div>
-      <p className="text-faint text-[11px] mt-1.5">
+      <p className="text-faint text-[11px] mt-2">
         {t("vsPrev")}: {periodLabel(lang, meta)}
       </p>
 
-      {/* range bar */}
+      {/* range strip */}
       {stats && stats.max > stats.min && (
-        <div className="mt-3 relative h-6">
+        <div className="mt-4 relative h-6">
           <div className="absolute inset-x-0 top-1/2 h-px bg-hairline" />
           <RangeMark stats={stats} />
         </div>
       )}
 
-      <div className="mt-6">
+      {/* weekly trend chart */}
+      {file && file.hist.length >= 2 && (
+        <section className="mt-10">
+          <h2 className="kicker border-b-2 border-ink pb-2">
+            {t("trendTitle")}
+          </h2>
+          <div className="mt-4">
+            <TrendChart hist={file.hist} />
+          </div>
+          <p className="text-faint text-[11px] mt-2">{t("trendNote")}</p>
+        </section>
+      )}
+
+      <div className="mt-10">
         <LocationPicker
           premises={allPremises}
           value={loc}
@@ -175,14 +193,14 @@ export default function ItemClient({
       </div>
 
       {/* price table */}
-      <div className="mt-4 border border-hairline">
-        <div className="px-3 py-2 text-[11px] text-dim border-b border-hairline flex items-center justify-between gap-3">
-          <span className="shrink-0">{t("priceSpread")}</span>
-          <span className="shrink-0">
+      <div className="mt-6">
+        <div className="flex items-center justify-between gap-3 border-b-2 border-ink pb-2">
+          <span className="kicker">{t("priceSpread")}</span>
+          <span className="kicker">
             {scoped?.length ?? "…"} {t("premises")}
           </span>
         </div>
-        <div className="flex items-baseline gap-3 px-3 py-1.5 text-[10px] tracking-wide text-faint border-b border-hairline">
+        <div className="flex items-baseline gap-3 py-1.5 text-[10px] tracking-[0.14em] uppercase text-faint border-b border-hairline">
           <SortButton
             className="w-16"
             label={t("price")}
@@ -204,10 +222,10 @@ export default function ItemClient({
           />
         </div>
         {!visible && (
-          <div className="px-3 py-6 text-dim text-[13px]">{t("loading")}</div>
+          <div className="py-6 text-dim text-[13px]">{t("loading")}</div>
         )}
         {visible && visible.length === 0 && (
-          <div className="px-3 py-6 text-dim text-[13px]">{t("noData")}</div>
+          <div className="py-6 text-dim text-[13px]">{t("noData")}</div>
         )}
         {visible?.map(({ row, premise }, idx) => {
           const [, price, prev] = row;
@@ -218,17 +236,19 @@ export default function ItemClient({
           return (
             <div
               key={`${row[0]}`}
-              className={`flex items-baseline gap-3 px-3 py-2 row-line last:border-b-0 text-[13px] ${
-                isCheapest ? "bg-panel" : ""
+              className={`flex items-baseline gap-3 py-2 row-line text-[13px] -mx-2 px-2 ${
+                isCheapest ? "bg-gold" : ""
               }`}
             >
               <span
-                className={`w-16 shrink-0 ${isCheapest ? "text-acid font-bold" : ""}`}
+                className={`w-16 shrink-0 font-mono ${
+                  isCheapest ? "text-accent font-semibold" : ""
+                }`}
               >
                 {rm(price)}
               </span>
               <span
-                className={`w-14 shrink-0 text-[11px] ${moveClass(pct)}`}
+                className={`w-14 shrink-0 text-[11px] font-mono ${moveClass(pct)}`}
                 title={prev !== null ? `${t("prevPrice")}: ${rm(prev)}` : ""}
               >
                 {pct !== null ? `${moveArrow(pct)}${pctStr(pct)}` : "·"}
@@ -236,7 +256,6 @@ export default function ItemClient({
               <span className="flex-1 min-w-0">
                 <span className="block truncate">
                   {titleCase(premise.name)}
-                  {isCheapest && <span className="text-acid"> ◀</span>}
                 </span>
                 <span className="block sm:hidden truncate text-dim text-[11px]">
                   {premise.district}, {premise.state} ·{" "}
@@ -246,7 +265,7 @@ export default function ItemClient({
               <span className="hidden sm:inline w-40 shrink-0 truncate text-dim text-[11px]">
                 {premise.district}, {premise.state}
               </span>
-              <span className="hidden sm:inline w-20 shrink-0 text-right text-faint text-[11px]">
+              <span className="hidden sm:inline w-20 shrink-0 text-right text-faint text-[11px] font-mono">
                 {row[3]}
               </span>
             </div>
@@ -255,19 +274,15 @@ export default function ItemClient({
         {scoped && scoped.length > PAGE && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="w-full px-3 py-2 text-[12px] text-dim hover:text-acid border-t border-hairline cursor-pointer text-left"
+            className="w-full py-2 text-[12px] text-dim hover:text-accent border-b border-hairline cursor-pointer text-left"
           >
-            {showAll
-              ? t("showLess")
-              : `${t("showAll")} (${scoped.length})`}
+            {showAll ? t("showLess") : `${t("showAll")} (${scoped.length})`}
           </button>
         )}
       </div>
-      <p className="text-faint text-[11px] mt-1.5">{t("coverageNote")}</p>
+      <p className="text-faint text-[11px] mt-2">{t("coverageNote")}</p>
 
-      {stats && (
-        <ShareBar item={item} stats={stats} loc={loc} meta={meta} />
-      )}
+      {stats && <ShareBar item={item} stats={stats} loc={loc} meta={meta} />}
     </div>
   );
 }
@@ -288,7 +303,9 @@ function SortButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-0.5 shrink-0 cursor-pointer hover:text-acid ${active ? "text-acid" : ""} ${className ?? ""}`}
+      className={`flex items-center gap-0.5 shrink-0 cursor-pointer hover:text-accent ${
+        active ? "text-accent" : ""
+      } ${className ?? ""}`}
     >
       {label}
       {active && <span>{dir === "asc" ? "▲" : "▼"}</span>}
@@ -299,21 +316,17 @@ function SortButton({
 function Stat({
   label,
   value,
-  acid,
   className,
 }: {
   label: string;
   value: string;
-  acid?: boolean;
   className?: string;
 }) {
   return (
-    <div className="bg-bg px-3 py-3">
-      <div className="text-[10px] tracking-widest text-faint uppercase">
-        {label}
-      </div>
+    <div className="border-t-2 border-ink pt-3">
+      <div className="kicker">{label}</div>
       <div
-        className={`mt-1 text-lg ${acid ? "text-acid" : ""} ${className ?? ""}`}
+        className={`mt-1 font-display font-semibold text-2xl sm:text-3xl ${className ?? ""}`}
       >
         {value}
       </div>
@@ -327,7 +340,7 @@ function RangeMark({ stats }: { stats: ScopedStats }) {
   return (
     <>
       <div
-        className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-acid"
+        className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-accent"
         style={{ left: pos(stats.min) }}
       />
       <div
