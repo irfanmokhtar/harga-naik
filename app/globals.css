@@ -1,53 +1,79 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0a0a;
-  --color-panel: #111111;
-  --color-ink: #ededed;
-  --color-dim: #8a8a8a;
-  --color-faint: #555555;
-  --color-hairline: #262626;
-  --color-acid: #c6f432;
-  --color-naik: #ff5c5c;
-  --color-turun: #c6f432;
-  --color-selection-ink: #0a0a0a;
-  --font-mono: var(--font-jetbrains), "IBM Plex Mono", ui-monospace, "SF Mono",
-    Menlo, monospace;
+  /* paper editorial — light is the default theme */
+  --color-bg: #faf7f0;
+  --color-panel: #f2eee2;
+  --color-ink: #1c1a17;
+  --color-dim: #6f6a5e;
+  --color-faint: #a29b8a;
+  --color-hairline: #e3ddcf;
+  --color-accent: #23479c;
+  --color-naik: #b23a24;
+  --color-turun: #1e6b4f;
+  --color-gold: #f3ead0;
+  --color-selection-ink: #faf7f0;
+  /* legacy alias for the old terminal accent — removed in cleanup task */
+  --color-acid: #23479c;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
-/* paper terminal — light theme overrides */
-html[data-theme="light"] {
-  --color-bg: #f4f2ec;
-  --color-panel: #eceade;
-  --color-ink: #111111;
-  --color-dim: #6b6b60;
-  --color-faint: #a3a396;
-  --color-hairline: #d8d5c8;
-  --color-acid: #5a7a00;
-  --color-naik: #c93838;
-  --color-turun: #5a7a00;
-  --color-selection-ink: #f4f2ec;
+/* warm charcoal — dark theme overrides */
+html[data-theme="dark"] {
+  --color-bg: #171412;
+  --color-panel: #211d18;
+  --color-ink: #ece7dc;
+  --color-dim: #a89f8f;
+  --color-faint: #6e6659;
+  --color-hairline: #322d26;
+  --color-accent: #93a9e4;
+  --color-naik: #e2694f;
+  --color-turun: #58b189;
+  --color-gold: #2a2417;
+  --color-selection-ink: #171412;
+  --color-acid: #93a9e4;
 }
 
 html {
   background: var(--color-bg);
   color: var(--color-ink);
-  color-scheme: dark;
-}
-
-html[data-theme="light"] {
   color-scheme: light;
 }
 
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 body {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums lining-nums;
+  font-family: var(--font-sans);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
 
+/* serif display text uses proportional lining figures (big numbers look loose in tabular) */
+.font-display {
+  font-variant-numeric: lining-nums proportional-nums;
+  letter-spacing: -0.01em;
+}
+
+/* price/figure columns align with tabular numerals */
+.font-mono {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* small-caps section label — the editorial kicker */
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
 ::selection {
-  background: var(--color-acid);
+  background: var(--color-accent);
   color: var(--color-selection-ink);
 }
 
@@ -87,11 +113,11 @@ select {
 
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%238a8a8a'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%236f6a5e'/></svg>");
   background-repeat: no-repeat;
   background-position: right 10px center;
 }
 
-html[data-theme="light"] select {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%236b6b60'/></svg>");
+html[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6'><path d='M0 0h8L4 6z' fill='%23a89f8f'/></svg>");
 }
