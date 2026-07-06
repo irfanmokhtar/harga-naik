@@ -129,7 +129,7 @@ def run(out_dir: Path) -> None:
         SELECT item_code, date_trunc('week', date)::DATE AS wk,
                min(price) AS mn, median(price) AS med, max(price) AS mx
         FROM fact
-        WHERE date > DATE '{latest}' - INTERVAL {HISTORY_WEEKS * 7} DAY
+        WHERE date >= date_trunc('week', DATE '{latest}') - INTERVAL {(HISTORY_WEEKS - 1) * 7} DAY
         GROUP BY 1, 2 ORDER BY 1, 2
     """)
     hist_by_item: dict[int, list] = {}
