@@ -27,7 +27,9 @@ const byShop = new Map(premises.map((p) => [p.code, []]));
 for (const file of readdirSync(PRICES)) {
   if (!file.endsWith(".json")) continue;
   const itemCode = Number(basename(file, ".json"));
-  const rows = JSON.parse(readFileSync(join(PRICES, file), "utf8"));
+  const parsed = JSON.parse(readFileSync(join(PRICES, file), "utf8"));
+  // shards are {rows, hist} since the history ingest; old shape was a bare array
+  const rows = Array.isArray(parsed) ? parsed : parsed.rows;
   for (const [premiseCode, price, prev, date] of rows) {
     let bucket = byShop.get(premiseCode);
     if (!bucket) byShop.set(premiseCode, (bucket = []));
