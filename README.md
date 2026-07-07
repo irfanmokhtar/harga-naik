@@ -22,11 +22,13 @@ default with an English toggle, and every view is shareable to WhatsApp.
   matching **shops/premises** with their cheapness score.
 - **Ticker** of the biggest movers scrolling across the top.
 - **Barang Naik / Barang Turun boards** — the biggest median price risers and
-  fallers vs the previous period, side by side.
+  fallers vs the previous period, each row with a 12-week **sparkline**.
 
 ### Item page (`/item/[code]`)
 - **Stats strip**: cheapest, median, highest price, and **% change vs the
   previous period**, plus a visual min–median–max **range bar**.
+- **Weekly trend chart** — national median line over a min–max band for the
+  last ~12 weeks, with crosshair/tooltip and arrow-key navigation.
 - **Location filter** — narrow every stat and the price table to a state and/or
   district (an honest picker, since the data carries no GPS coordinates).
 - **Price spread table** — every premise's current price, its change vs that
@@ -62,8 +64,9 @@ default with an English toggle, and every view is shareable to WhatsApp.
   deep link.
 
 ### Everywhere
-- **Bilingual** BM/EN toggle (persisted), **dark/light theme** toggle, and a
-  terminal-inspired UI. Movement is colour-coded (naik = up/red, turun =
+- **Bilingual** BM/EN toggle (persisted), **light/dark theme** toggle, and an
+  editorial (data-journalism) look — Fraunces display serif, Inter body,
+  JetBrains Mono for figures. Movement is colour-coded (naik = up/red, turun =
   down/green).
 
 ## Architecture

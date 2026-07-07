@@ -7,27 +7,27 @@ export type Lang = "ms" | "en";
 const STRINGS = {
   ms: {
     edition: "Edisi",
-    heroTitle: "Harga naik ke, minggu ini?",
+    heroTitle: "Harga naik ke turun minggu ni?",
     searchPlaceholder: "Cari barang… (cth: ayam, telur, minyak masak)",
     search: "Carian",
     barangNaik: "Barang Naik",
     barangTurun: "Barang Turun",
-    boardSub: "Perubahan harga penengah",
+    boardSub: "Perubahan harga median",
     featBakulDesc:
-      "Senarai belanja anda, dikira — premis paling jimat untuk seluruh bakul.",
-    featBandingDesc: "Dua kedai, barang demi barang — mana satu lebih jimat?",
-    featKedaiDesc: "Cari mana-mana kedai dan lihat berapa jimat harganya.",
+      "Cari premis paling jimat untuk senarai barang dalam bakul.",
+    featBandingDesc: "Banding harga barang antara kedai, yang mana lebih jimat?",
+    featKedaiDesc: "Cari kedai dan semak harga barang hari ini.",
     open: "Buka",
     basket: "Bakul",
     basketShort: "Bakul",
     item: "Barang",
     price: "Harga",
-    median: "Penengah",
+    median: "Median",
     cheapest: "Termurah",
     highest: "Tertinggi",
     change: "Ubah",
-    premise: "Premis",
-    premises: "premis",
+    premise: "Kedai",
+    premises: "kedai",
     state: "Negeri",
     district: "Daerah",
     allStates: "Semua negeri",
@@ -44,7 +44,7 @@ const STRINGS = {
     removeFromBasket: "Buang",
     emptyBasket: "Bakul kosong. Cari barang dan tambah ke bakul.",
     basketTotal: "Jumlah bakul",
-    basketCheapest: "Premis paling jimat untuk seluruh bakul",
+    basketCheapest: "Kedai paling jimat untuk seluruh bakul",
     coverage: "barang tersedia",
     share: "Kongsi",
     shareWhatsApp: "Kongsi ke WhatsApp",
@@ -61,38 +61,38 @@ const STRINGS = {
     cpiNote:
       "Data ini untuk pemantauan harga, bukan ukuran inflasi. Rujuk data CPI rasmi DOSM untuk inflasi.",
     coverageNote:
-      "Hanya sebahagian premis tersenarai. PriceCatcher meninjau premis & barang secara berkala, hanya premis & barang yang ditinjau akan dikemaskini mengikut tarikh.",
+      "Hanya sebahagian kedai tersenarai. PriceCatcher meninjau kedai & barang secara berkala, hanya kedai & barang yang ditinjau akan dikemaskini mengikut tarikh.",
     backHome: "← Kembali",
     notEnoughData: "Sampel kecil — tiada perbandingan",
     loading: "Memuatkan…",
     itemsTracked: "barang dipantau",
-    premisesTracked: "premis di seluruh negara",
-    typeFilter: "Jenis premis",
+    premisesTracked: "kedai di seluruh negara",
+    typeFilter: "Jenis kedai",
     allTypes: "Semua jenis",
     top: "NAIK PALING BANYAK",
     bottom: "TURUN PALING BANYAK",
     copied: "Disalin!",
     copyText: "Salin teks",
-    shops: "Kedai / Premis",
+    shops: "Kedai",
     cheapShort: "murah",
     cheapnessScore: "Skor jimat",
     scoreNote:
-      "% barang di kedai ini yang lebih murah daripada harga penengah kebangsaan",
+      "% barang di kedai ini yang lebih murah daripada harga median kebangsaan",
     cheapHere: "MURAH",
     expensiveHere: "MAHAL",
-    vsMedian: "vs penengah",
-    itemsAtShop: "barang dipantau di premis ini",
+    vsMedian: "vs median",
+    itemsAtShop: "barang dipantau di kedai ini",
     pickShop: "Cari kedai…",
     atThisShop: "Di kedai pilihan anda",
     moreThanCheapest: "lebih daripada termurah",
     missingHere: "Tiada di sini",
     compareShops: "Banding Kedai",
-    commonItemsTotal: "Jumlah barang sepunya",
+    commonItemsTotal: "Jumlah barang",
     compareThisShop: "Banding kedai ini",
     navBanding: "Banding",
     trendTitle: "Arah harga mingguan",
     trendNote:
-      "Penengah kebangsaan mingguan · jalur = julat termurah–tertinggi",
+      "Median kebangsaan mingguan · jalur = julat termurah–tertinggi",
     methodNote: "Tetingkap perbandingan",
   },
   en: {
@@ -194,7 +194,7 @@ export function periodLabel(
   meta: { currentWindowDays: number; previousWindowDays: number }
 ): string {
   return lang === "ms"
-    ? `${meta.currentWindowDays} hari terakhir vs ${meta.previousWindowDays} hari sebelumnya`
+    ? `${meta.currentWindowDays} hari terakhir vs ${meta.previousWindowDays} hari sebelum`
     : `last ${meta.currentWindowDays} days vs the ${meta.previousWindowDays} days before`;
 }
 

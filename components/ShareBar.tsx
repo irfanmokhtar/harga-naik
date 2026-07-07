@@ -45,7 +45,7 @@ export default function ShareBar({
       return [
         `*${name}* (${item.unit}) — ${scopeLabel}`,
         `💰 Termurah: ${rm(stats.min)} di ${cheapest}`,
-        `Penengah: ${rm(stats.med)} · Tertinggi: ${rm(stats.max)}`,
+        `Median: ${rm(stats.med)} · Tertinggi: ${rm(stats.max)}`,
         move,
         ``,
         `Data ${meta.latestDate} · harganaik · Sumber: PriceCatcher KPDN/DOSM (CC BY 4.0)`,

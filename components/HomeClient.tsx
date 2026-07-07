@@ -194,8 +194,11 @@ export default function HomeClient({
               itemByCode={itemByCode}
             />
           </section>
-          <p className="mt-4 text-[11px] text-faint">
-            {t("boardSub")} · {periodLabel(lang, meta)} · {t("coverageNote")}
+          <p className="mt-4 text-[11px] text-faint space-y-1">
+            <span className="block">
+              * {t("boardSub")} · {periodLabel(lang, meta)}.
+            </span>
+            <span className="block">* {t("coverageNote")}</span>
           </p>
 
           {/* feature cards */}
