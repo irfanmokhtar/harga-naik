@@ -23,3 +23,34 @@ export function titleCase(s: string): string {
     .toLowerCase()
     .replace(/(^|[\s(/-])\p{L}/gu, (c) => c.toUpperCase());
 }
+
+function premiseQuery(p: {
+  name: string;
+  address: string;
+  district: string;
+  state: string;
+}): string {
+  return [p.name, p.address, p.district, p.state].filter(Boolean).join(", ");
+}
+
+export function mapsUrl(p: {
+  name: string;
+  address: string;
+  district: string;
+  state: string;
+}): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    premiseQuery(p)
+  )}`;
+}
+
+export function wazeUrl(p: {
+  name: string;
+  address: string;
+  district: string;
+  state: string;
+}): string {
+  return `https://waze.com/ul?q=${encodeURIComponent(
+    premiseQuery(p)
+  )}&navigate=yes`;
+}

@@ -5,13 +5,52 @@ import Link from "next/link";
 import type { Item, Meta, Premise, PriceRow } from "@/lib/types";
 import { useLang } from "@/lib/i18n";
 import { loadPrices, useBasket, usePremises } from "@/lib/useData";
-import { rm, titleCase } from "@/lib/format";
+import { mapsUrl, rm, titleCase, wazeUrl } from "@/lib/format";
 import { searchItems } from "@/lib/search";
 import LocationPicker, {
   matchesLocation,
   type LocationFilter,
 } from "@/components/LocationPicker";
 import ShopPicker from "@/components/ShopPicker";
+
+function GoogleMapsIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#EA4335"
+      />
+      <circle cx="12" cy="9" r="2.6" fill="#fff" />
+    </svg>
+  );
+}
+
+function WazeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle cx="11" cy="12" r="9" fill="#33CCFF" />
+      <circle cx="8" cy="11" r="1.3" fill="#053167" />
+      <circle cx="14" cy="11" r="1.3" fill="#053167" />
+      <path
+        d="M7.5 14.8c1 1.1 2.1 1.6 3.5 1.6s2.5-.5 3.5-1.6"
+        stroke="#053167"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <circle cx="18" cy="6" r="2" fill="#33CCFF" stroke="#053167" strokeWidth="0.8" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="#25D366">
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.08-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18.13c-1.7 0-3.29-.47-4.65-1.28l-.33-.2-3.02.79.8-2.94-.21-.3A8.11 8.11 0 0 1 3.87 12c0-4.48 3.65-8.13 8.13-8.13S20.13 7.52 20.13 12 16.48 20.13 12 20.13z" />
+      <path d="M16.7 14.24c-.26-.13-1.53-.75-1.77-.84-.24-.09-.41-.13-.58.13-.17.26-.66.84-.81 1.01-.15.17-.3.19-.56.06-.26-.13-1.09-.4-2.08-1.28-.77-.68-1.29-1.53-1.44-1.79-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.45.13-.15.17-.26.26-.43.09-.17.04-.32-.02-.45-.06-.13-.58-1.39-.79-1.9-.21-.5-.42-.43-.58-.44h-.5c-.17 0-.45.06-.68.32-.24.26-.89.87-.89 2.12s.91 2.46 1.04 2.63c.13.17 1.79 2.73 4.34 3.83.61.26 1.08.42 1.45.53.61.19 1.16.17 1.6.1.49-.07 1.53-.62 1.74-1.23.22-.6.22-1.11.15-1.22-.06-.11-.24-.17-.5-.3z" />
+    </svg>
+  );
+}
 
 interface PremiseTotal {
   premise: Premise;
@@ -226,18 +265,39 @@ export default function BasketClient({
                   {rm(winner.total)}
                 </div>
               </div>
-              <button
-                onClick={() =>
-                  window.open(
-                    `https://wa.me/?text=${encodeURIComponent(shareText())}`,
-                    "_blank",
-                    "noopener"
-                  )
-                }
-                className="mt-4 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink cursor-pointer"
-              >
-                {t("shareWhatsApp")}
-              </button>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://wa.me/?text=${encodeURIComponent(shareText())}`,
+                      "_blank",
+                      "noopener"
+                    )
+                  }
+                  className="flex items-center gap-1.5 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink cursor-pointer"
+                >
+                  <WhatsAppIcon className="w-4 h-4 shrink-0" />
+                  {t("shareWhatsApp")}
+                </button>
+                <a
+                  href={mapsUrl(winner.premise)}
+                  target="_blank"
+                  rel="noopener"
+                  className="flex items-center gap-1.5 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink"
+                >
+                  <GoogleMapsIcon className="w-4 h-4 shrink-0" />
+                  {t("openMaps")}
+                </a>
+                <a
+                  href={wazeUrl(winner.premise)}
+                  target="_blank"
+                  rel="noopener"
+                  className="flex items-center gap-1.5 border border-hairline px-3 py-2.5 sm:py-1.5 text-[12px] text-dim hover:text-ink hover:border-ink"
+                >
+                  <WazeIcon className="w-4 h-4 shrink-0" />
+                  {t("openWaze")}
+                </a>
+              </div>
             </div>
           )}
           {ranking && !winner && ranking.length > 0 && (
@@ -337,6 +397,24 @@ export default function BasketClient({
                   </span>
                   <span className="hidden sm:inline w-40 shrink-0 truncate text-dim text-[11px]">
                     {r.premise.district}, {r.premise.state}
+                  </span>
+                  <span className="hidden sm:flex shrink-0 gap-2">
+                    <a
+                      href={mapsUrl(r.premise)}
+                      target="_blank"
+                      rel="noopener"
+                      title={t("openMaps")}
+                    >
+                      <GoogleMapsIcon className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={wazeUrl(r.premise)}
+                      target="_blank"
+                      rel="noopener"
+                      title={t("openWaze")}
+                    >
+                      <WazeIcon className="w-4 h-4" />
+                    </a>
                   </span>
                 </div>
               ))}

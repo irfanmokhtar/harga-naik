@@ -5,6 +5,25 @@ import { useLang } from "@/lib/i18n";
 import { useBasket } from "@/lib/useData";
 import ThemeToggle from "@/components/ThemeToggle";
 
+function CartIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="9" cy="20" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="18" cy="20" r="1.4" fill="currentColor" stroke="none" />
+      <path d="M2.5 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7H6" />
+    </svg>
+  );
+}
+
 export default function Header({ latestDate }: { latestDate: string }) {
   const { lang, setLang, t } = useLang();
   const { codes } = useBasket();
@@ -28,10 +47,14 @@ export default function Header({ latestDate }: { latestDate: string }) {
           <Link href="/banding" className={navCls}>
             {t("navBanding")}
           </Link>
-          <Link href="/bakul" className={navCls}>
-            {t("basketShort")}
+          <Link
+            href="/bakul"
+            className={`${navCls} inline-flex items-center gap-1`}
+            aria-label={t("basketShort")}
+          >
+            <CartIcon className="w-4 h-4 shrink-0" />
             {codes.length > 0 && (
-              <span className="text-accent"> {codes.length}</span>
+              <span className="text-accent">{codes.length}</span>
             )}
           </Link>
           <button
