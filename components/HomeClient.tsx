@@ -79,6 +79,18 @@ export default function HomeClient({
     searchRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   };
 
+  // breadth-bar tap → jump to the matching board. boards are hidden while
+  // searching, so clear the query first, then scroll on the next frame.
+  const jumpToBoard = (id: string) => {
+    setQuery("");
+    requestAnimationFrame(() =>
+      document.getElementById(id)?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      })
+    );
+  };
+
   return (
     <div>
       <Ticker movers={movers} itemByCode={itemByCode} />
@@ -91,11 +103,56 @@ export default function HomeClient({
         <h1 className="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-3 max-w-[18ch]">
           {t("heroTitle")}
         </h1>
-        <p className="text-dim mt-4 text-[15px]">
-          {lang === "ms"
-            ? `${nUp} barang naik, ${nDown} turun — ${periodLabel(lang, meta)}.`
-            : `${nUp} items up, ${nDown} down — ${periodLabel(lang, meta)}.`}
-        </p>
+        {/* market breadth bar — how much of the surveyed basket moved which way.
+            each half jumps to its board (risers / fallers) — handy on mobile */}
+        {nUp + nDown > 0 && (
+          <div className="mt-6 max-w-xl">
+            <div className="flex items-baseline justify-between font-mono text-[13px]">
+              <button
+                type="button"
+                onClick={() => jumpToBoard("board-naik")}
+                className="text-naik hover:underline"
+              >
+                ▲ {nUp} {lang === "ms" ? "naik" : "up"}
+              </button>
+              <button
+                type="button"
+                onClick={() => jumpToBoard("board-turun")}
+                className="text-turun hover:underline"
+              >
+                {nDown} {lang === "ms" ? "turun" : "down"} ▼
+              </button>
+            </div>
+            <div className="mt-2 flex h-1.5 gap-1">
+              <button
+                type="button"
+                onClick={() => jumpToBoard("board-naik")}
+                aria-label={
+                  lang === "ms"
+                    ? `${nUp} barang naik. Lompat ke barang paling naik`
+                    : `${nUp} items up. Jump to biggest risers`
+                }
+                className="bg-naik cursor-pointer"
+                style={{ width: `${(nUp / (nUp + nDown)) * 100}%` }}
+              />
+              <button
+                type="button"
+                onClick={() => jumpToBoard("board-turun")}
+                aria-label={
+                  lang === "ms"
+                    ? `${nDown} barang turun. Lompat ke barang paling turun`
+                    : `${nDown} items down. Jump to biggest fallers`
+                }
+                className="bg-turun flex-1 cursor-pointer"
+              />
+            </div>
+            <p className="text-dim text-[12px] mt-2">
+              {lang === "ms"
+                ? `Perubahan harga median, ${periodLabel(lang, meta)}.`
+                : `Median price change, ${periodLabel(lang, meta)}.`}
+            </p>
+          </div>
+        )}
 
         <div className="mt-8">
           <input
@@ -187,11 +244,19 @@ export default function HomeClient({
         <>
           {/* barang naik board */}
           <section className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
-            <Board title={t("top")} movers={risers} itemByCode={itemByCode} />
+            <Board
+              title={t("top")}
+              tone="naik"
+              movers={risers}
+              itemByCode={itemByCode}
+              id="board-naik"
+            />
             <Board
               title={t("bottom")}
+              tone="turun"
               movers={fallers}
               itemByCode={itemByCode}
+              id="board-turun"
             />
           </section>
           <p className="mt-4 text-[11px] text-faint space-y-1">
@@ -230,16 +295,28 @@ export default function HomeClient({
 
 function Board({
   title,
+  tone,
   movers,
   itemByCode,
+  id,
 }: {
   title: string;
+  tone: "naik" | "turun";
   movers: Trend[];
   itemByCode: Map<number, Item>;
+  id?: string;
 }) {
   return (
-    <div>
-      <h2 className="kicker border-b-2 border-ink pb-2">{title}</h2>
+    <div id={id} className="scroll-mt-20">
+      <h2 className="kicker border-b-2 border-ink pb-2">
+        <span
+          className={tone === "naik" ? "text-naik" : "text-turun"}
+          aria-hidden="true"
+        >
+          {tone === "naik" ? "▲ " : "▼ "}
+        </span>
+        {title}
+      </h2>
       {movers.map((m) => {
         const item = itemByCode.get(m.code)!;
         return (
@@ -286,7 +363,12 @@ function FeatureCard({
     <>
       <p className="kicker group-hover:text-accent">{kicker}</p>
       <p className="font-display text-lg mt-2 leading-snug">{desc}</p>
-      <p className="mt-3 text-[13px] text-accent">{cta} →</p>
+      <p className="mt-3 text-[13px] text-accent">
+        {cta}{" "}
+        <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+          →
+        </span>
+      </p>
     </>
   );
   return href ? (
