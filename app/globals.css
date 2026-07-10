@@ -74,6 +74,23 @@ body {
   color: var(--color-selection-ink);
 }
 
+/* visible keyboard focus everywhere; inputs keep their border treatment */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+/* the brand's question word — italic Fraunces in the naik red */
+.wordmark-naik {
+  font-style: italic;
+  color: var(--color-naik);
+}
+
 /* mechanical ticker — constant-speed marquee, no easing */
 @keyframes ticker {
   from {
@@ -88,7 +105,8 @@ body {
   animation: ticker 120s linear infinite;
 }
 
-.ticker-track:hover {
+.ticker-track:hover,
+.ticker-track:focus-within {
   animation-play-state: paused;
 }
 

@@ -65,7 +65,7 @@ const STRINGS = {
     coverageNote:
       "Hanya sebahagian kedai tersenarai. PriceCatcher meninjau kedai & barang secara berkala, hanya kedai & barang yang ditinjau akan dikemaskini mengikut tarikh.",
     backHome: "← Kembali",
-    notEnoughData: "Sampel kecil — tiada perbandingan",
+    notEnoughData: "Sampel kecil, tiada perbandingan",
     loading: "Memuatkan…",
     itemsTracked: "barang dipantau",
     premisesTracked: "kedai di seluruh negara",
@@ -106,8 +106,8 @@ const STRINGS = {
     barangTurun: "Price Fallers",
     boardSub: "Median price change",
     featBakulDesc:
-      "Your shopping list, priced — the cheapest premise for the whole basket.",
-    featBandingDesc: "Two shops, item by item — which one saves more?",
+      "Your shopping list, priced. Find the cheapest premise for the whole basket.",
+    featBandingDesc: "Two shops, item by item. Which one saves more?",
     featKedaiDesc: "Search any shop and see how cheap it runs.",
     open: "Open",
     basket: "My Basket",
@@ -155,9 +155,9 @@ const STRINGS = {
     cpiNote:
       "This data is for price surveillance, not inflation measurement. Refer to DOSM's official CPI data for inflation.",
     coverageNote:
-      "Not all premises are listed — PriceCatcher surveys only a rotating sample of premises & items, so only premises that reported a price recently appear here.",
+      "Not all premises are listed. PriceCatcher surveys only a rotating sample of premises & items, so only premises that reported a price recently appear here.",
     backHome: "← Back",
-    notEnoughData: "Small sample — no comparison",
+    notEnoughData: "Small sample, no comparison",
     loading: "Loading…",
     itemsTracked: "items tracked",
     premisesTracked: "premises nationwide",

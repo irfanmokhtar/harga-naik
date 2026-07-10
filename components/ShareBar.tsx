@@ -43,7 +43,7 @@ export default function ShareBar({
       : "";
     if (lang === "ms") {
       return [
-        `*${name}* (${item.unit}) — ${scopeLabel}`,
+        `*${name}* (${item.unit}) · ${scopeLabel}`,
         `💰 Termurah: ${rm(stats.min)} di ${cheapest}`,
         `Median: ${rm(stats.med)} · Tertinggi: ${rm(stats.max)}`,
         move,
@@ -54,7 +54,7 @@ export default function ShareBar({
         .join("\n");
     }
     return [
-      `*${name}* (${item.unit}) — ${scopeLabel}`,
+      `*${name}* (${item.unit}) · ${scopeLabel}`,
       `💰 Cheapest: ${rm(stats.min)} at ${cheapest}`,
       `Median: ${rm(stats.med)} · Highest: ${rm(stats.max)}`,
       move,

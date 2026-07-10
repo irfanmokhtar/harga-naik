@@ -162,9 +162,18 @@ export default function ItemClient({
 
       {/* range strip */}
       {stats && stats.max > stats.min && (
-        <div className="mt-4 relative h-6">
-          <div className="absolute inset-x-0 top-1/2 h-px bg-hairline" />
-          <RangeMark stats={stats} />
+        <div className="mt-4">
+          <div className="relative h-6">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-hairline" />
+            <RangeMark stats={stats} />
+          </div>
+          <div
+            className="flex justify-between font-mono text-[10px]"
+            aria-hidden="true"
+          >
+            <span className="text-accent">{rm(stats.min)}</span>
+            <span className="text-faint">{rm(stats.max)}</span>
+          </div>
         </div>
       )}
 

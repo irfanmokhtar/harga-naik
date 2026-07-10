@@ -38,7 +38,7 @@ export default function Header({ latestDate }: { latestDate: string }) {
           href="/"
           className="shrink-0 leading-none font-display font-semibold text-[22px] tracking-tight"
         >
-          HargaNaikKe
+          Harga<span className="wordmark-naik">Naik</span>Ke
         </Link>
         <div className="hidden sm:block text-[11px] tracking-[0.14em] uppercase text-dim truncate">
           {t("asOf")} {latestDate}

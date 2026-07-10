@@ -28,7 +28,7 @@ export default function ShopPicker({
           {titleCase(value.name)}
           <span className="text-dim text-[11px]">
             {" "}
-            — {value.district}, {value.state}
+            · {value.district}, {value.state}
           </span>
         </span>
         <button

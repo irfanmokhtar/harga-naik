@@ -10,6 +10,7 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   axes: ["opsz"],
+  style: ["normal", "italic"],
 });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrains = JetBrains_Mono({
@@ -18,7 +19,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HargaNaikKe — papan harga barang Malaysia",
+  title: "HargaNaikKe · papan harga barang Malaysia",
   description:
     "Semak harga barang keperluan di seluruh Malaysia. Data PriceCatcher KPDN & DOSM.",
 };

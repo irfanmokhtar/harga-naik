@@ -154,8 +154,8 @@ export default function BasketClient({
     });
     const head =
       lang === "ms"
-        ? `*Bakul Saya* — ${basketItems.length} barang\n🏆 Paling jimat: ${titleCase(winner.premise.name)} (${winner.premise.district}, ${winner.premise.state})\n💰 Jumlah: ${rm(winner.total)}`
-        : `*My Basket* — ${basketItems.length} items\n🏆 Cheapest: ${titleCase(winner.premise.name)} (${winner.premise.district}, ${winner.premise.state})\n💰 Total: ${rm(winner.total)}`;
+        ? `*Bakul Saya* · ${basketItems.length} barang\n🏆 Paling jimat: ${titleCase(winner.premise.name)} (${winner.premise.district}, ${winner.premise.state})\n💰 Jumlah: ${rm(winner.total)}`
+        : `*My Basket* · ${basketItems.length} items\n🏆 Cheapest: ${titleCase(winner.premise.name)} (${winner.premise.district}, ${winner.premise.state})\n💰 Total: ${rm(winner.total)}`;
     const tail =
       lang === "ms"
         ? `Data ${meta.latestDate} · harganaik · Sumber: PriceCatcher KPDN/DOSM (CC BY 4.0)`
@@ -303,8 +303,8 @@ export default function BasketClient({
           {ranking && !winner && ranking.length > 0 && (
             <p className="mt-6 text-dim text-[13px]">
               {lang === "ms"
-                ? "Tiada satu premis dengan semua barang di kawasan ini — premis terbaik di bawah."
-                : "No single premise stocks the whole basket here — best options below."}
+                ? "Tiada satu premis dengan semua barang di kawasan ini. Premis terbaik di bawah."
+                : "No single premise stocks the whole basket here. Best options below."}
             </p>
           )}
           {ranking && ranking.length === 0 && (
